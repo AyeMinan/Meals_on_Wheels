@@ -5,14 +5,18 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\User;
+use Exception;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 
 
 class AuthController extends Controller
 {
     public function register(Request $request){
+
+        try{
         $validator = Validator::make($request->all(), [
             "name" => "required",
             "email"=> ["required","email"],
@@ -36,16 +40,25 @@ class AuthController extends Controller
 
                     return response($response, 200);
 
+    }}catch(Exception $e){
+        Log::channel('sora_error_log')->error('Register Error: ' . $e->getMessage());
+        return response()->error('Internal Server Error', 500);
     }
 
     }
 
     public function logout(){
+        try{
         auth()->user()->tokens()->delete();
         return response(["message" => "Logged Out Successfully"]);
+    }catch(Exception $e){
+        Log::channel('sora_error_log')->error('Logout Error: ' . $e->getMessage());
+        return response()->error('Internal Server Error', 500);
+    }
 
     }
     public function login(Request $request){
+        try{
         $validator = Validator::make($request->all(), [
             "email"=> ["required","email"],
             "password"=> ["required","min:8"] ]);
@@ -67,6 +80,11 @@ class AuthController extends Controller
                 }
 
                 return response($response, 200);
+
+}
+}catch(Exception $e){
+    Log::channel('sora_error_log')->error('Login Error: ' . $e->getMessage());
+    return response()->error('Internal Server Error', 500);
 }
 }
 
