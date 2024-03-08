@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use App\Models\Caregiver;
 
 class User extends Authenticatable
 {
@@ -21,6 +22,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'type',
     ];
 
     /**
@@ -42,4 +44,20 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
+
+    public function profile(){
+        return $this->hasOne(User::class,'user_id');
+    }
+
+    public function member(){
+        return $this->hasOne(Member::class);
+    }
+
+    public function caregiver()
+    {
+        return $this->hasOne(Caregiver::class);
+    }
+
+   
 }
+

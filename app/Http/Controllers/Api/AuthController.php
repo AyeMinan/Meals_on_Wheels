@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Models\Profile;
 use Illuminate\Http\Request;
 use App\Models\User;
 use Exception;
@@ -10,13 +11,15 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
-
+use App\Models\Volunteer;
+use App\Models\Caregiver;
+use App\Models\Donor;
+use App\Models\Member;
+use App\Models\Partner;
 
 class AuthController extends Controller
 {
     public function register(Request $request){
-
-        try{
         $validator = Validator::make($request->all(), [
             "name" => "required",
             "email"=> ["required","email"],
@@ -32,20 +35,18 @@ class AuthController extends Controller
                     "password"=> Hash::make($request->password),
                 ]);
 
-                $token = $user->createToken("internProjectToken")->plainTextToken;
+    $token = $user->createToken("internProjectToken")->plainTextToken;
 
-                $response = [
-                    "token" => $token,
-                    "user" => $user ];
+    $response = [
+        "token" => $token,
+        "message" => "User registered successfully",
+        "user" => $user,
+    ];
 
                     return response($response, 200);
 
-    }}catch(Exception $e){
-        Log::channel('sora_error_log')->error('Register Error: ' . $e->getMessage());
-        return response()->error('Internal Server Error', 500);
     }
 
-    }
 
     public function logout(){
         try{
@@ -76,6 +77,7 @@ class AuthController extends Controller
                     $token = $user->createToken("internProjectToken")->plainTextToken;
                     $response = [
                         "token"=> $token,
+                        "message"=>"User logged in succesfully",
                         "user"=> $user ];
                 }
 
