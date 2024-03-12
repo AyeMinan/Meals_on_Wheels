@@ -13,6 +13,8 @@ use Illuminate\Support\Facades\Validator;
 class AuthController extends Controller
 {
     public function register(Request $request){
+ 
+        try{
         $validator = Validator::make($request->all(), [
             "name" => "required",
             "email"=> ["required","email"],
@@ -27,18 +29,22 @@ class AuthController extends Controller
                     "email"=> $request->email,
                     "password"=> Hash::make($request->password),
                 ]);
-
+ 
                 $token = $user->createToken("internProjectToken")->plainTextToken;
-
+ 
                 $response = [
                     "token" => $token,
                     "user" => $user ];
-
+ 
                     return response($response, 200);
-
+ 
+    }}catch(Exception $e){
+        Log::channel('sora_error_log')->error('Login Error: ' . $e->getMessage());
+        return response()->error('Internal Server Error', 500);
     }
-
+ 
     }
+    
 
     public function logout(){
         auth()->user()->tokens()->delete();
