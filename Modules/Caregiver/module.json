@@ -1,0 +1,11 @@
+{
+    "name": "Caregiver",
+    "alias": "caregiver",
+    "description": "",
+    "keywords": [],
+    "priority": 0,
+    "providers": [
+        "Modules\\Caregiver\\App\\Providers\\CaregiverServiceProvider"
+    ],
+    "files": []
+}

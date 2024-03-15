@@ -1,0 +1,34 @@
+{
+    "name": "nwidart/member",
+    "description": "",
+    "authors": [
+        {
+            "name": "Nicolas Widart",
+            "email": "n.widart@gmail.com"
+        }
+    ],
+    "extra": {
+        "laravel": {
+            "providers": [],
+            "aliases": {
+
+            }
+        }
+    },
+    "autoload": {
+        "psr-4": {
+            "Modules\\Member\\": "",
+            "Modules\\Member\\App\\": "app/",
+            "Modules\\Member\\Database\\Factories\\": "database/factories/",
+            "Modules\\Member\\Database\\Seeders\\": "database/seeders/",
+            "Modules\\Member\\App\\Services\\": "modules/member/app/Services",
+            "Modules\\Member\\Repositories\\": "modules/member/Repositories",
+            "Modules\\Member\\App\\Interfaces\\": "modules/member/app/Interfaces"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Modules\\Member\\Tests\\": "tests/"
+        }
+    }
+}
