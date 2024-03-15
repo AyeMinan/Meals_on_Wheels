@@ -1,0 +1,34 @@
+{
+    "name": "nwidart/caregiver",
+    "description": "",
+    "authors": [
+        {
+            "name": "Nicolas Widart",
+            "email": "n.widart@gmail.com"
+        }
+    ],
+    "extra": {
+        "laravel": {
+            "providers": [],
+            "aliases": {
+
+            }
+        }
+    },
+    "autoload": {
+        "psr-4": {
+            "Modules\\Caregiver\\": "",
+            "Modules\\Caregiver\\App\\": "app/",
+            "Modules\\Caregiver\\Database\\Factories\\": "database/factories/",
+            "Modules\\Caregiver\\Database\\Seeders\\": "database/seeders/",
+            "Modules\\Caregiver\\App\\Services\\": "modules/caregiver/app/Services",
+            "Modules\\Caregiver\\App\\Repositories\\": "modules/caregiver/app/Repositories",
+            "Modules\\Caregiver\\App\\Interfaces\\": "modulescaregiver/app/Interfaces"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Modules\\Caregiver\\Tests\\": "tests/"
+        }
+    }
+}

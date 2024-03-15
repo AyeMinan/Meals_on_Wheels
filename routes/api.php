@@ -33,4 +33,4 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
 
 //member register
-Route::post('/store-data', [MemberCaregiverController::class, 'storeData']);
+// Route::post('/store-data', [MemberCaregiverController::class, 'storeData']);

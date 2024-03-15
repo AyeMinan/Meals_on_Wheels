@@ -9,12 +9,12 @@ use App\Models\User;
 class Caregiver extends Model
 {
     use HasFactory;
-    protected $fillable = ['contact_information', 'relationship_to_member'];
+    protected $fillable = ['first_name', 'last_name', 'gender', 'date_of_birth','relationship_with_member', 'user_id'];
 
     public function user(){
         return $this->belongsTo(User::class,'user_id');
     }
-    
+
     public function profile(){
         return $this->belongsTo(Profile::class);
     }

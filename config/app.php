@@ -168,8 +168,9 @@ return [
         // App\Providers\BroadcastServiceProvider::class,
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
-    ])->toArray(),
+        Nwidart\Modules\LaravelModulesServiceProvider::class,
 
+    ])->toArray(),
     /*
     |--------------------------------------------------------------------------
     | Class Aliases
@@ -183,6 +184,7 @@ return [
 
     'aliases' => Facade::defaultAliases()->merge([
         // 'Example' => App\Facades\Example::class,
+        'Module' => Nwidart\Modules\Facades\Module::class,
     ])->toArray(),
 
 ];

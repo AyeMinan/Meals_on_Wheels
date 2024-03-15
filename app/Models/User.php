@@ -19,9 +19,10 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     protected $fillable = [
-        'name',
+        'user_name',
         'email',
         'password',
+        'confirm_password',
         'type',
     ];
 
@@ -58,6 +59,17 @@ class User extends Authenticatable
         return $this->hasOne(Caregiver::class);
     }
 
-   
+    public function partner(){
+        return $this->hasOne(Partner::class);
+    }
+    public function volunteer(){
+        return $this->hasOne(Volunteer::class);
+
+    }
+ public function donor(){
+        return $this->hasOne(Donor::class);
+
+    }
+
 }
 

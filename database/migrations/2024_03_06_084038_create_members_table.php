@@ -13,10 +13,14 @@ return new class extends Migration
     {
         Schema::create('members', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained('users', 'id'); 
+            $table->foreignId('user_id')->constrained('users', 'id');
+            $table->string('first_name');
+            $table->string('last_name');
+            $table->string('gender');
+            $table->date('date_of_birth');
             $table->integer('age');
-            $table->string('health_condition');
-            $table->string('dietary_requirements');
+            $table->string('emergency_contact_number');
+            $table->string('dietary_restriction');
             $table->timestamps();
         });
     }

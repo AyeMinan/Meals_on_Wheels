@@ -1,0 +1,8 @@
+{
+    "Member": true,
+    "Interface": true,
+    "MermberRepositoryInterface": true,
+    "Request": true,
+    "MemberRequest": true,
+    "Caregiver": true
+}
