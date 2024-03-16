@@ -2,6 +2,7 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use Modules\Volunteer\App\Http\Controllers\VolunteerController;
 
 /*
     |--------------------------------------------------------------------------
@@ -14,6 +15,12 @@ use Illuminate\Support\Facades\Route;
     |
 */
 
-Route::middleware(['auth:sanctum'])->prefix('v1')->name('api.')->group(function () {
-    Route::get('volunteer', fn (Request $request) => $request->user())->name('volunteer');
-});
+
+//volunteer
+Route::controller(VolunteerController::class)->group(function(){
+    Route::get('/volunteers','index');
+    Route::post('/volunteer','store');
+    Route::get('/volunteer/{volunteer}','show');
+    Route::put('/volunteer/{volunteer}','update');
+    Route::delete('/volunteer/{volunteer}','destroy');
+})->middleware(['auth:sanctum','admin']);

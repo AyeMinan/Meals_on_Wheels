@@ -38,23 +38,6 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
 
 
-// //partner
-// Route::controller(PartnerController::class)->group(function(){
-//     Route::get('/partners','index');
-//     Route::post('/partner','store');
-//     Route::get('/partner/{partner}','show');
-//     Route::put('/partner/{partner}','update');
-//     Route::delete('/partner/{partner}','destroy');
-// });
-
-// //volunteer
-// Route::controller(VolunteerController::class)->group(function(){
-//     Route::get('/volunteers','index');
-//     Route::post('/volunteer','store');
-//     Route::get('/volunteer/{volunteer}','show');
-//     Route::put('/volunteer/{volunteer}','update');
-//     Route::delete('/volunteer/{volunteer}','destroy')->middleware(['auth:sanctum','admin']);
-// });
 
 //meal
 Route::controller(MealController::class)->group(function(){
