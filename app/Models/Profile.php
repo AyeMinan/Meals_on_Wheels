@@ -9,12 +9,22 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 class Profile extends Model
 {
     use HasFactory;
-    protected $fillable=['name','image','phone','address','user_id'];
+    protected $fillable=['user_name','image','phone_number','address','user_id'];
 
     public function user()
     {
         return $this->belongsTo(User::class);
     }
 
+<<<<<<< HEAD
+=======
+    public function member(){
+        return $this->hasOne(Member::class);
+    }
+
+    public function caregiver(){
+        return $this->hasOne(Member::class);
+    }
+>>>>>>> develop
 
 }

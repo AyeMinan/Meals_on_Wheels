@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Caregiver extends Model
 {
     use HasFactory;
+<<<<<<< HEAD
     protected $fillable = [
         'type',
         'email',
@@ -23,5 +24,15 @@ class Caregiver extends Model
 
     public function user(){
         return $this->belongsTo(User::class);
+=======
+    protected $fillable = ['first_name', 'last_name', 'gender', 'date_of_birth','relationship_with_member', 'user_id'];
+
+    public function user(){
+        return $this->belongsTo(User::class,'user_id');
+    }
+
+    public function profile(){
+        return $this->belongsTo(Profile::class);
+>>>>>>> develop
     }
 }

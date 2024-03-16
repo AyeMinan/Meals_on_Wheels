@@ -55,3 +55,5 @@ Route::middleware(['admin'])->group(function () {
         return response()->json(['message' => 'Admin Dashboard']);
     });
 });
+//member register
+// Route::post('/store-data', [MemberCaregiverController::class, 'storeData']);
