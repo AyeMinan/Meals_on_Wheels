@@ -16,7 +16,5 @@ class Profile extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function member(){
-        return $this->hasOne(Member::class);
-    }
+
 }

@@ -8,6 +8,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use App\Models\Caregiver;
+use Modules\Partner\App\Models\Partner;
 
 class User extends Authenticatable
 {
@@ -23,6 +24,7 @@ class User extends Authenticatable
         'email',
         'password',
         'type',
+        'role_as',
     ];
 
     /**
@@ -46,18 +48,24 @@ class User extends Authenticatable
     ];
 
     public function profile(){
-        return $this->hasOne(User::class,'user_id');
+        return $this->hasOne(Profile::class,'user_id');
     }
 
+    public function partner(){
+        return $this->hasOne(Partner::class,'user_id');
+    }
     public function member(){
-        return $this->hasOne(Member::class);
+        return $this->hasOne(Member::class,'user_id');
+    }
+    public function volunteer(){
+        return $this->hasOne(Volunteer::class,'user_id');
+    }
+    public function caregber(){
+        return $this->hasOne(Caregiver::class,'user_id');
+    }
+    public function donor(){
+        return $this->hasOne(Donor::class,'user_id');
     }
 
-    public function caregiver()
-    {
-        return $this->hasOne(Caregiver::class);
-    }
-
-   
 }
 

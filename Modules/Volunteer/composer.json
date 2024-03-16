@@ -1,0 +1,31 @@
+{
+    "name": "nwidart/volunteer",
+    "description": "",
+    "authors": [
+        {
+            "name": "Nicolas Widart",
+            "email": "n.widart@gmail.com"
+        }
+    ],
+    "extra": {
+        "laravel": {
+            "providers": [],
+            "aliases": {
+
+            }
+        }
+    },
+    "autoload": {
+        "psr-4": {
+            "Modules\\Volunteer\\": "",
+            "Modules\\Volunteer\\App\\": "app/",
+            "Modules\\Volunteer\\Database\\Factories\\": "database/factories/",
+            "Modules\\Volunteer\\Database\\Seeders\\": "database/seeders/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Modules\\Volunteer\\Tests\\": "tests/"
+        }
+    }
+}
