@@ -3,18 +3,25 @@
 namespace Modules\Donor\App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Models\Donor;
+use App\Models\Profile;
+use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Modules\Donor\App\Http\Requests\DonorRequest;
+use Modules\Donor\App\Services\DonorService;
 
 class DonorController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+   protected $donorService;
+
+   public function __construct(DonorService $donorService){
+    $this->donorService = $donorService;
+   }
     public function index()
     {
-        return view('donor::index');
+        return csrf_token();
     }
 
     /**
@@ -28,9 +35,15 @@ class DonorController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request): RedirectResponse
+    public function store(DonorRequest $donorRequest)
+
     {
-        //
+        $validatedData = $donorRequest->validated();
+
+        $this->donorService->storeDonor($validatedData);
+
+        return response()->json("Donor has been created succesfully");
+        
     }
 
     /**
@@ -51,17 +64,19 @@ class DonorController extends Controller
 
     /**
      * Update the specified resource in storage.
-     */
-    public function update(Request $request, $id): RedirectResponse
-    {
-        //
-    }
-
+     */  public function update(Request $request, $id)
+{
+      $result= $this-> donorService->updateDonor($request, $id);
+        return response()->json(['message' => "Updated Successful"], 200);
+    
+}
     /**
      * Remove the specified resource from storage.
      */
     public function destroy($id)
     {
-        //
+        $this->donorService->deleteDonor($id);
+        return response()->json(['message' => "Deleted Successful"], 200);
+      
     }
 }

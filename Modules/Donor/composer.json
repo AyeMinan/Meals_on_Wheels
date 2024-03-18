@@ -20,7 +20,10 @@
             "Modules\\Donor\\": "",
             "Modules\\Donor\\App\\": "app/",
             "Modules\\Donor\\Database\\Factories\\": "database/factories/",
-            "Modules\\Donor\\Database\\Seeders\\": "database/seeders/"
+            "Modules\\Donor\\Database\\Seeders\\": "database/seeders/",
+            "Modules\\Donor\\App\\Services\\": "modules/donor/app/Services",
+            "Modules\\Donor\\App\\Repositories\\": "modules/donor/app/Repositories",
+            "Modules\\Donor\\App\\Interfaces\\": "modules/donor/app/Interfaces"
         }
     },
     "autoload-dev": {

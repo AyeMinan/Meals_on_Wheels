@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\DonorController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -16,4 +17,6 @@ use Illuminate\Support\Facades\Route;
 
 Route::middleware(['auth:sanctum'])->prefix('v1')->name('api.')->group(function () {
     Route::get('donor', fn (Request $request) => $request->user())->name('donor');
+    Route::delete('/donor/{id}', [DonorController::class, 'destroy']);
+    Route::put('/donor/{id}', [DonorController::class, 'update']);
 });
