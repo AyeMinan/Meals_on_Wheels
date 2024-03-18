@@ -8,14 +8,22 @@ use Illuminate\Database\Eloquent\Model;
 class Donor extends Model
 {
     use HasFactory;
-
-    protected $fillable = ['first_name', 'last_name', 'gender', 'date_of_birth','user_id'];
-
-    public function user()
-    {
+    protected $fillable = [
+        'type',
+        'email',
+        'user_name',
+        'password',
+        'confirm_password',
+        'first_name',
+        'last_name',
+        'gender',
+        'phone_number',
+        'date_of_birth',
+        'address',
+        'image',
+        'user_id'
+    ];
+    public function user(){
         return $this->belongsTo(User::class);
-    }
-    public function profile(){
-        return $this->belongsTo(Profile::class);
     }
 }

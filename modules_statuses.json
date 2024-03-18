@@ -1,3 +1,15 @@
 {
+<<<<<<< HEAD
     "Donor": true
 }
+=======
+    "Volunteer": true,
+    "Partner": true,
+    "Member": true,
+    "Interface": true,
+    "MermberRepositoryInterface": true,
+    "Request": true,
+    "MemberRequest": true,
+    "Caregiver": true
+}
+>>>>>>> 439faefc0732277ac9371fc5ee8e100c63002a91
