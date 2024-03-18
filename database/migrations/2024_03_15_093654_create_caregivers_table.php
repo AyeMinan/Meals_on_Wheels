@@ -28,7 +28,6 @@ return new class extends Migration
             $table->text('address');
             $table->string('dietary_restriction');
             $table->string('relationship_with_member');
-
             $table->string('image')->nullable();
             $table->foreignId('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->timestamps();

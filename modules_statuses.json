@@ -6,5 +6,6 @@
     "MermberRepositoryInterface": true,
     "Request": true,
     "MemberRequest": true,
-    "Caregiver": true
+    "Caregiver": true,
+    "Donor": true
 }

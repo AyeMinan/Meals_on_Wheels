@@ -13,17 +13,17 @@ return new class extends Migration
     {
         Schema::create('donors', function (Blueprint $table) {
             $table->id();
-            $table->string('type')->default('donor');
-            $table->string('email')->unique();
-            $table->string('user_name');
-            $table->string('password');
-            $table->string('confirm_password');
+            $table->string('type')->default('donor')->nullable();
+            $table->string('email')->unique()->nullable();
+            $table->string('user_name')->nullable();
+            $table->string('password')->nullable();
+            $table->string('confirm_password')->nullable();
             $table->string('first_name');
             $table->string('last_name');
             $table->string('gender');
-            $table->string('phone_number');
+            $table->string('phone_number')->nullable();
             $table->date('date_of_birth');
-            $table->text('address');
+            $table->text('address')->nullable();
             $table->string('image')->nullable();
             $table->foreignId('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->timestamps();
