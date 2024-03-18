@@ -16,15 +16,12 @@ class Profile extends Model
         return $this->belongsTo(User::class);
     }
 
-<<<<<<< HEAD
-=======
     public function member(){
         return $this->hasOne(Member::class);
     }
 
     public function caregiver(){
-        return $this->hasOne(Member::class);
+        return $this->hasOne(Caregiver::class);
     }
->>>>>>> develop
 
 }

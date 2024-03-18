@@ -1,0 +1,16 @@
+<?php
+
+namespace Modules\Donor\Database\Seeders;
+
+use Illuminate\Database\Seeder;
+
+class DonorDatabaseSeeder extends Seeder
+{
+    /**
+     * Run the database seeds.
+     */
+    public function run(): void
+    {
+        // $this->call([]);
+    }
+}

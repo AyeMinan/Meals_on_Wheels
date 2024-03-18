@@ -51,33 +51,14 @@ class User extends Authenticatable
     public function profile(){
         return $this->hasOne(Profile::class,'user_id');
     }
-
-    public function partner(){
-        return $this->hasOne(Partner::class,'user_id');
-    }
-    public function member(){
-        return $this->hasOne(Member::class,'user_id');
-    }
-    public function volunteer(){
-        return $this->hasOne(Volunteer::class,'user_id');
-    }
-    public function caregber(){
-        return $this->hasOne(Caregiver::class,'user_id');
-    }
-    public function donor(){
-        return $this->hasOne(Donor::class,'user_id');
-    }
-
-<<<<<<< HEAD
-=======
     public function caregiver()
     {
         return $this->hasOne(Caregiver::class);
     }
 
-    public function partner(){
-        return $this->hasOne(Partner::class);
-    }
+    // public function partner(){
+    //     return $this->hasOne(Partner::class);
+    // }
     public function volunteer(){
         return $this->hasOne(Volunteer::class);
 
@@ -87,6 +68,5 @@ class User extends Authenticatable
 
     }
 
->>>>>>> develop
 }
 

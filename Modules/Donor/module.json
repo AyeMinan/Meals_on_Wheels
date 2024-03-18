@@ -1,0 +1,11 @@
+{
+    "name": "Donor",
+    "alias": "donor",
+    "description": "",
+    "keywords": [],
+    "priority": 0,
+    "providers": [
+        "Modules\\Donor\\App\\Providers\\DonorServiceProvider"
+    ],
+    "files": []
+}
