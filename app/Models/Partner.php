@@ -9,18 +9,11 @@ class Partner extends Model
 {
     use HasFactory;
     protected $fillable = [
-        'type',
-        'email',
-        'user_name',
-        'password',
-        'confirm_password',
+
         'first_name',
         'last_name',
-        'address',
-        'phone_number',
         'shop_name',
         'shop_address',
-        'image',
         'user_id'
     ];
 
