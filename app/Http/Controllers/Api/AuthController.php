@@ -14,6 +14,8 @@ use App\Models\Caregiver;
 use App\Models\Donor;
 use App\Models\Member;
 use App\Models\Partner;
+use Exception;
+use Illuminate\Support\Facades\DB;
 
 class AuthController extends Controller
 {
@@ -44,9 +46,10 @@ class AuthController extends Controller
                 'error'  => $validator->messages(),
             ]);
         }
-
+        try{
+            DB::beginTransaction();
         $user = User::create([
-            'name' => $request->name,
+            'user_name' => $request->user_name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
             'type' => $request->type,
@@ -127,6 +130,11 @@ class AuthController extends Controller
             default:
                 break;
         }
+        DB::commit();
+    }catch(\Throwable $th){
+        DB::rollBack();
+        throw new Exception($th->getmessage());
+    }
 
 
         $response = [
