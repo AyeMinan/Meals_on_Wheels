@@ -15,18 +15,10 @@ class PartnerFactory extends Factory
     public function definition()
     {
         return [
-            'type' => 'partner',
-            'email' => $this->faker->unique()->safeEmail,
-            'user_name' => $this->faker->userName,
-            'password' => bcrypt('12345678'),
-            'confirm_password' => bcrypt('12345678'),
             'first_name' => $this->faker->firstName,
             'last_name' => $this->faker->lastName,
-            'address' => $this->faker->address,
-            'phone_number' => $this->faker->phoneNumber,
             'shop_name' => $this->faker->company,
             'shop_address' => $this->faker->address,
-            'image' => $this->faker->imageUrl(200, 200, 'people'),
             'user_id' => function () {
                 return \App\Models\User::factory()->create()->id;
             },

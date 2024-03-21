@@ -20,7 +20,7 @@ class AuthController extends Controller
     public function register(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'name' => 'required',
+            'user_name' => 'required',
             'email' => ['required', 'unique:users,email', 'email'],
             'password' => ['required', 'min:8'],
             'confirm_password' => ['required', 'min:8'],
@@ -46,17 +46,22 @@ class AuthController extends Controller
         }
 
         $user = User::create([
-            'name' => $request->name,
+            'user_name' => $request->user_name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
+            'confirm_password' => Hash::make($request->password),
             'type' => $request->type,
         ]);
 
+        if($request['password'] !== $request['confirm_password']){
+            return response()->json("Password doesn't match");
+        }
+
         // Create a profile instance
         $profile = new Profile([
-            'name' => $request->name,
+            'user_name' => $request->user_name,
             'address' => $request->address,
-            'phone' => $request->phone_number,
+            'phone_number' => $request->phone_number,
         ]);
 
         if ($request->hasFile('image')) {
@@ -78,9 +83,7 @@ class AuthController extends Controller
                     'date_of_birth' => $request->date_of_birth,
                     'dietary_restriction' => $request->dietary_restriction,
                 ]);
-                if ($request->hasFile('image')) {
-                    $member->image = $request->file('image')->store('images');
-                }
+
                 $user->member()->save($member);
                 break;
 
@@ -92,9 +95,7 @@ class AuthController extends Controller
                     'date_of_birth' => $request->date_of_birth,
                     'relationship_with_member' => $request->relationship_with_member,
                 ]);
-                if ($request->hasFile('image')) {
-                    $caregiver->image = $request->file('image')->store('images');
-                }
+
                 $user->caregiver()->save($caregiver);
                 break;
 
@@ -105,9 +106,7 @@ class AuthController extends Controller
                     'shop_name' => $request->shop_name,
                     'shop_address' => $request->shop_address,
                 ]);
-                if ($request->hasFile('image')) {
-                    $partner->image = $request->file('image')->store('images');
-                }
+
                 $user->partner()->save($partner);
                 break;
 
@@ -118,9 +117,7 @@ class AuthController extends Controller
                     'gender' => $request->gender,
                     'date_of_birth' => $request->date_of_birth,
                 ]);
-                if ($request->hasFile('image')) {
-                    $volunteer->image = $request->file('image')->store('images');
-                }
+           
                 $user->volunteer()->save($volunteer);
                 break;
 

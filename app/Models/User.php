@@ -63,6 +63,11 @@ class User extends Authenticatable
         return $this->hasOne(Volunteer::class);
 
     }
+
+    public function member(){
+        return $this->hasOne(Member::class);
+
+    }
  public function donor(){
         return $this->hasOne(Donor::class);
 

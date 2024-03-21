@@ -27,6 +27,7 @@ class DatabaseSeeder extends Seeder
             CaregiverSeeder::class,
             VolunteerSeeder::class,
             ProfileSeeder::class,
+            PartnerSeeder::class,
         ]);
     }
 }

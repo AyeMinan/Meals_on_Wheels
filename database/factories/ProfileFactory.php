@@ -21,9 +21,9 @@ class ProfileFactory extends Factory
     {
         return [
             'image' => $this->faker->imageUrl(),
-            'name' => $this->faker->name,
+            'user_name' => $this->faker->name,
             'address' => $this->faker->address,
-            'phone' => $this->faker->numerify('+951234567'),
+            'phone_number' => $this->faker->numerify('+951234567'),
             'user_id' => function () {
                 return \App\Models\User::factory()->create()->id;
             },
