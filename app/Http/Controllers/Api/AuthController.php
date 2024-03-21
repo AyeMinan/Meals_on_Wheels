@@ -23,6 +23,7 @@ class AuthController extends Controller
             'name' => 'required',
             'email' => ['required', 'unique:users,email', 'email'],
             'password' => ['required', 'min:8'],
+            'confirm_password' => ['required', 'min:8'],
             'type' => 'required|string|in:member,caregiver,partner,volunteer,donor',
             'age' => 'required_if:type,member|integer',
             'phone_number' => 'required|string',
@@ -34,8 +35,6 @@ class AuthController extends Controller
             'relationship_with_member' => 'required_if:type,caregiver|string',
             'shop_name' => 'required_if:type,partner|string',
             'shop_address' => 'required_if:type,partner|string',
-            'volunteer_type' => 'required_if:type,volunteer|string',
-            'availability' => 'required_if:type,volunteer|string',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
@@ -75,10 +74,8 @@ class AuthController extends Controller
                     'last_name' => $request->last_name,
                     'gender' => $request->gender,
                     'age' => $request->age,
-                    'phone_number' => $request->phone_number,
                     'emergency_contact_number' => $request->emergency_contact_number,
                     'date_of_birth' => $request->date_of_birth,
-                    'address' => $request->address,
                     'dietary_restriction' => $request->dietary_restriction,
                 ]);
                 if ($request->hasFile('image')) {
@@ -91,6 +88,8 @@ class AuthController extends Controller
                 $caregiver = new Caregiver([
                     'first_name' => $request->first_name,
                     'last_name' => $request->last_name,
+                    'gender' => $request->gender,
+                    'date_of_birth' => $request->date_of_birth,
                     'relationship_with_member' => $request->relationship_with_member,
                 ]);
                 if ($request->hasFile('image')) {
@@ -103,8 +102,6 @@ class AuthController extends Controller
                 $partner = new Partner([
                     'first_name' => $request->first_name,
                     'last_name' => $request->last_name,
-                    'address' => $request->address,
-                    'phone_number' => $request->phone_number,
                     'shop_name' => $request->shop_name,
                     'shop_address' => $request->shop_address,
                 ]);
@@ -119,11 +116,7 @@ class AuthController extends Controller
                     'first_name' => $request->first_name,
                     'last_name' => $request->last_name,
                     'gender' => $request->gender,
-                    'phone_number' => $request->phone_number,
                     'date_of_birth' => $request->date_of_birth,
-                    'address' => $request->address,
-                    'volunteer_type' => $request->volunteer_type,
-                    'availability' => $request->availability,
                 ]);
                 if ($request->hasFile('image')) {
                     $volunteer->image = $request->file('image')->store('images');
