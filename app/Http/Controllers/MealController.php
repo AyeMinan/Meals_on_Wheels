@@ -37,6 +37,7 @@ class MealController extends Controller
             'is_frozen' => 'required|boolean',
             'delivery_status' => 'required|boolean',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048', // Validate image upload
+            'temperature' => 'required'
         ]);
 
         // Handle image upload
@@ -48,6 +49,8 @@ class MealController extends Controller
             $file->move($path, $filename);
             $validatedData['image'] = $filename;
         }
+
+
 
         $meal = Meal::create($validatedData);
 
@@ -72,6 +75,7 @@ class MealController extends Controller
             'is_frozen' => 'required|boolean',
             'delivery_status' => 'required|boolean',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048', // Validate image upload
+            'temperature' => 'required'
         ]);
 
         // Handle image upload

@@ -17,7 +17,7 @@ class MemberRequest extends FormRequest
             'password' => ['required', 'min:8'],
             'confirm_password' => ['required', 'min:8'],
             'type' => 'required|string|in:member,caregiver,partner,volunteer,donor',
-            'image' => ['required'],
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'address' => ['required'],
             'phone_number' => ['required'],
             'first_name' => ['required_if:type,member|string'],
