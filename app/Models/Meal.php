@@ -18,5 +18,6 @@ class Meal extends Model
         'price',
         'is_frozen',
         'delivery_status',
+        'temperature'
     ];
 }
