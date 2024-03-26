@@ -4,12 +4,14 @@ use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\CaregiverController;
 use App\Http\Controllers\DonorController;
 use App\Http\Controllers\MealController;
+use App\Http\Controllers\MealsDeliverController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\MemberController;
 use App\Http\Controllers\PartnerController;
 use App\Http\Controllers\VolunteerController;
+use Illuminate\Routing\Router;
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
@@ -55,5 +57,11 @@ Route::middleware(['admin'])->group(function () {
         return response()->json(['message' => 'Admin Dashboard']);
     });
 });
-//member register
-// Route::post('/store-data', [MemberCaregiverController::class, 'storeData']);
+//meal schedule when the customer make order
+
+Route::post('/meal-schedule',[MealsDeliverController::class,'store'])->middleware('auth:sanctum');
+// Route to retrieve scheduled meal deliveries for a partner
+Route::get('/partner-meal-deliveries/{partnerId}', [MealsDeliverController::class, 'partnerMealDeliveries'])->middleware('auth:sanctum');
+
+// Route to retrieve scheduled meal deliveries for a volunteer
+Route::get('/volunteer-meal-deliveries/{volunteerId}', [MealsDeliverController::class, 'volunteerMealDeliveries'])->middleware('auth:sanctum');

@@ -11,6 +11,11 @@ class DonorService{
         $this->donorRepository = $donorRepository;
     }
 
+    public function index()
+    {
+        return $this->donorRepository->allDonor();
+    }
+
     public function storeDonor($validatedData){
         return $this->donorRepository->storeDonor($validatedData);
     }

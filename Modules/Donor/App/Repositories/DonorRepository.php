@@ -8,6 +8,14 @@ use Illuminate\Support\Facades\Hash;
 use Modules\Donor\App\Interfaces\DonorRepositoryInterface;
 use App\Models\User;
 class DonorRepository implements DonorRepositoryInterface{
+
+
+    public function allDonor()
+    {
+        $donors=Donor::with('donation')->get();
+        return $donors;
+    }
+
     public function storeDonor($validatedData){
 
         try{
