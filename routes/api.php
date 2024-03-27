@@ -44,7 +44,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
 //meal
 Route::controller(MealController::class)->group(function(){
     Route::get('/meals','index')->middleware('auth:sanctum');
-    Route::post('/meal','store')->middleware('admin');
+    Route::post('/meal','store');
     Route::get('/meal/{meal}','show')->middleware('admin');
     Route::put('/meal/{meal}','update');
     Route::delete('/meal/{meal}','destroy');
@@ -65,3 +65,5 @@ Route::get('/partner-meal-deliveries/{partnerId}', [MealsDeliverController::clas
 
 // Route to retrieve scheduled meal deliveries for a volunteer
 Route::get('/volunteer-meal-deliveries/{volunteerId}', [MealsDeliverController::class, 'volunteerMealDeliveries'])->middleware('auth:sanctum');
+
+

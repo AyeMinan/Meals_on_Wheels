@@ -12,6 +12,12 @@ use Modules\Donor\App\Services\DonorService;
 use Modules\Member\App\Interfaces\MemberRepositoryInterface;
 use Modules\Member\App\Services\MemberService;
 use Modules\Member\Repositories\MemberRepository;
+use Modules\Partner\App\Interface\PartnerInterface;
+use Modules\Partner\App\Repository\PartnerRepository;
+use Modules\Partner\App\Service\PartnerService;
+use Modules\Volunteer\App\Interface\VolunteerInterface;
+use Modules\Volunteer\App\Repository\VolunteerRepository;
+use Modules\Volunteer\App\Service\VolunteerService;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -25,7 +31,12 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(CaregiverRepositoryInterface::class, CaregiverRepository::class);
         $this->app->bind(DonorRepositoryInterface::class, DonorRepository::class);
 
-        
+        $this->app->bind(PartnerInterface::class, PartnerRepository::class);
+
+        $this->app->bind(VolunteerInterface::class, VolunteerRepository::class);
+
+
+
         $this->app->bind(DonorService::class, function ($app) {
             return new DonorService($app->make(DonorRepositoryInterface::class));
         });
@@ -34,6 +45,16 @@ class AppServiceProvider extends ServiceProvider
         });
         $this->app->bind(MemberService::class, function ($app) {
             return new MemberService($app->make(MemberRepositoryInterface::class));
+
+        });
+
+        $this->app->bind(PartnerService::class, function ($app) {
+            return new PartnerService($app->make(PartnerInterface::class));
+
+        });
+
+        $this->app->bind(VolunteerService::class, function ($app) {
+            return new VolunteerService($app->make(VolunteerInterface::class));
 
         });
 

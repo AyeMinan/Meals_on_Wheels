@@ -8,19 +8,21 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Modules\Volunteer\App\Http\Requests\VolunteerRequest;
 use Modules\Volunteer\App\Repository\VolunteerClass;
+use Modules\Volunteer\App\Service\VolunteerService;
 
 class VolunteerController extends Controller
 {
-    protected $volunteerRepository;
-   public function __construct(VolunteerClass $volunteerRepository){
-        $this->volunteerRepository=$volunteerRepository;
+    protected $volunteerService;
+   public function __construct(VolunteerService $volunteerService){
+        $this->volunteerService=$volunteerService;
    }
     public function index()
     {
-        $volunteers=$this->volunteerRepository->allVolunteer();
+        $volunteers=$this->volunteerService->allVolunteer();
         return response()->json([
             'success'=>true,
             'volunteer'=>$volunteers,
+            'token'=>csrf_token(),
         ]);
 
     }
@@ -29,7 +31,8 @@ class VolunteerController extends Controller
     public function store(VolunteerRequest $request)
     {
         $validatedData=$request->validated();
-        $volunteer=$this->volunteerRepository->createVolunteer($validatedData);
+        $volunteer=$this->volunteerService->storeVolunteer($validatedData);
+
         return response()->json([
             'success'=>true,
             'volunteer'=>$volunteer,
@@ -40,7 +43,7 @@ class VolunteerController extends Controller
 
     public function show($id)
     {
-        $volunteer=$this->volunteerRepository->getVolunteerById($id);
+        $volunteer=$this->volunteerService->getVolunteerById($id);
         return response()->json([
             'success'=>true,
             'volunteer'=>$volunteer,
@@ -51,7 +54,7 @@ class VolunteerController extends Controller
     public function update(VolunteerRequest $request, $id)
     {
         $validatedData=$request->validated();
-        $volunteer=$this->volunteerRepository->updateVolunteer($validatedData,$id);
+        $volunteer=$this->volunteerService->updateVolunteer($validatedData,$id);
         return response()->json([
             'success'=>true,
             'volunteer'=>$volunteer,
@@ -63,10 +66,10 @@ class VolunteerController extends Controller
      */
     public function destroy($id)
     {
-        $this->volunteerRepository->deleteVolunteer($id);
+        $this->volunteerService->deleteVolunteer($id);
         return response()->json([
             'success'=>true,
-            
+
         ]);
     }
 }

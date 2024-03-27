@@ -15,5 +15,5 @@ use Modules\Donor\App\Http\Controllers\DonorController;
 */
 
 Route::group([], function () {
-    Route::resource('donor', DonorController::class)->names('donor');
+    Route::resource('donor', DonorController::class)->names('donor')->middleware(['admin','auth:sanctum']);
 });

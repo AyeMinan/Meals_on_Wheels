@@ -16,11 +16,4 @@ use Modules\Volunteer\App\Http\Controllers\VolunteerController;
 */
 
 
-//volunteer
-Route::controller(VolunteerController::class)->group(function(){
-    Route::get('/volunteers','index');
-    Route::post('/volunteer','store');
-    Route::get('/volunteer/{volunteer}','show');
-    Route::put('/volunteer/{volunteer}','update');
-    Route::delete('/volunteer/{volunteer}','destroy');
-})->middleware(['auth:sanctum','admin']);
+

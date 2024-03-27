@@ -15,5 +15,5 @@ use Modules\Partner\App\Http\Controllers\PartnerController;
 */
 
 Route::group([], function () {
-    Route::resource('partner', PartnerController::class)->names('partner');
+    Route::resource('partner', PartnerController::class)->names('partner')->middleware(['admin','auth:sanctum']);
 });

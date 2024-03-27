@@ -5,11 +5,12 @@ namespace Modules\Partner\App\Http\Controllers;
 use App\Http\Controllers\Controller;
 use App\Repository\PartnerClass;
 use Modules\Partner\App\Http\Requests\PartnerRequest;
+use Modules\Partner\App\Service\PartnerService;
 
 class PartnerController extends Controller
 {
     protected $partnerRepository;
-    public function __construct(\Modules\Partner\App\Repository\PartnerClass $partnerRepository){
+    public function __construct(PartnerService $partnerRepository){
         $this->partnerRepository=$partnerRepository;
     }
     public function index()
@@ -18,6 +19,7 @@ class PartnerController extends Controller
         return response()->json([
             'success'=>true,
             'partner'=>$partners,
+            'token'=>csrf_token(),
         ]);
     }
 
@@ -26,7 +28,7 @@ class PartnerController extends Controller
     public function store(PartnerRequest $request)
     {
         $validatedData=$request->validated();
-        $partner=$this->partnerRepository->createPartner($validatedData);
+        $partner=$this->partnerRepository->storePartner($validatedData);
         return response()->json([
             'success'=>true,
             'partner'=>$partner,
@@ -36,10 +38,11 @@ class PartnerController extends Controller
 
     public function show($id)
     {
-        $partner=$this->partnerRepository->getPartnerById($id);
+        $partner=$this->partnerRepository->showPartner($id);
         return response()->json([
             'success'=>true,
             'partner'=>$partner,
+            'token'=>csrf_token(),
         ]);
     }
 

@@ -15,5 +15,5 @@ use Modules\Member\App\Http\Controllers\MemberController;
 */
 
 Route::group([], function () {
-    Route::resource('member', MemberController::class)->names('member');
+    Route::resource('member', MemberController::class)->names('member')->middleware(['admin','auth:sanctum']);
 });

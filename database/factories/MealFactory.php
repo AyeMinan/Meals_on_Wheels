@@ -26,6 +26,7 @@ class MealFactory extends Factory
             'is_frozen' => $this->faker->boolean,
             'delivery_status' => $this->faker->boolean,
             'image' => $this->faker->imageUrl(),
+            'temperature'=>$this->faker->randomFloat(2, -20, 40),
         ];
     }
 }

@@ -3,7 +3,7 @@
 namespace Modules\Donor\App\Models;
 
 use App\Models\Donor;
-use App\Models\Donor;
+
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Modules\Donor\Database\factories\DonationFactory;

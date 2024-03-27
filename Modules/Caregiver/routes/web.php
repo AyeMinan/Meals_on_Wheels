@@ -15,5 +15,5 @@ use Modules\Caregiver\App\Http\Controllers\CaregiverController;
 */
 
 Route::group([], function () {
-    Route::resource('caregiver', CaregiverController::class)->names('caregiver');
+    Route::resource('caregiver', CaregiverController::class)->names('caregiver')->middleware(['admin','auth:sanctum']);
 });
