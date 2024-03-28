@@ -15,7 +15,8 @@ class MealController extends Controller
         return response()->json(['data' => $meals], 200);
     }
     public function showPartnerMeals(){
-        $partnerMeals = Meal::with('partner')->get();
+        $user = auth()->user();
+        $partnerMeals = Meal::where('partner_id', $user->id)->get();
         return response()->json(['data' => $partnerMeals], 200);
     }
 

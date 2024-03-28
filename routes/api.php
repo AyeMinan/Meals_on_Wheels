@@ -42,33 +42,29 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
 });
 
-<<<<<<< HEAD
+
 Route::get('/checkout', [StripeController::class, 'checkout']);
 Route::post('/purchase', [StripeController::class, 'purchase']);
 Route::get('/success', [StripeController::class, 'success']);
 
 
+//meal
+Route::controller(MealController::class)->group(function(){
 
-//meal
-Route::controller(MealController::class)->group(function(){
-    Route::get('/meals','index');
-    Route::get('/showPartnerMeals', 'showPartnerMeals');
-=======
-//meal
-Route::controller(MealController::class)->group(function(){
+    // Route::get('/meals','index');
+    // Route::get('/showPartnerMeals', 'showPartnerMeals');
+    // Route::post('/meal','store');
+    // Route::get('/meal/{meal}','show');
+    // Route::put('/meal/{meal}','update');
+    // Route::delete('/meal/{meal}','destroy');
+
     Route::get('/meals','index')->middleware('auth:sanctum');
-<<<<<<< HEAD
->>>>>>> develop
-    Route::post('/meal','store');
-    Route::get('/meal/{meal}','show');
-    Route::put('/meal/{meal}','update');
-    Route::delete('/meal/{meal}','destroy');
-=======
+    Route::get('/showPartnerMeals', 'showPartnerMeals')->middleware('auth:sanctum', 'admin');
     Route::post('/meal','store')->middleware(['auth:sanctum','admin']);
     Route::get('/meal/{meal}','show')->middleware('auth:sanctum');
     Route::put('/meal/{meal}','update')->middleware(['auth:sanctum','admin']);
     Route::delete('/meal/{meal}','destroy')->middleware(['auth:sanctum','admin']);
->>>>>>> b35c4a680d2a0d0b02633842b8d296442cd3baf3
+
 });
 
 
@@ -86,5 +82,4 @@ Route::get('/partner-meal-deliveries/{partnerId}', [MealsDeliverController::clas
 
 // Route to retrieve scheduled meal deliveries for a volunteer
 Route::get('/volunteer-meal-deliveries/{volunteerId}', [MealsDeliverController::class, 'volunteerMealDeliveries'])->middleware('auth:sanctum');
-
 
