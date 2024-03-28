@@ -42,12 +42,6 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
 });
 
-
-Route::get('/checkout', [StripeController::class, 'checkout']);
-Route::post('/purchase', [StripeController::class, 'purchase']);
-Route::get('/success', [StripeController::class, 'success']);
-
-
 //meal
 Route::controller(MealController::class)->group(function(){
 
@@ -59,12 +53,10 @@ Route::controller(MealController::class)->group(function(){
     // Route::delete('/meal/{meal}','destroy');
 
     Route::get('/meals','index')->middleware('auth:sanctum');
-    Route::get('/showPartnerMeals', 'showPartnerMeals')->middleware('auth:sanctum', 'admin');
     Route::post('/meal','store')->middleware(['auth:sanctum','admin']);
     Route::get('/meal/{meal}','show')->middleware('auth:sanctum');
     Route::put('/meal/{meal}','update')->middleware(['auth:sanctum','admin']);
     Route::delete('/meal/{meal}','destroy')->middleware(['auth:sanctum','admin']);
-
 });
 
 
