@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\Partner;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -14,8 +15,10 @@ class MealFactory extends Factory
      *
      * @return array<string, mixed>
      */
+
     public function definition(): array
     {
+        $partnerId = Partner::inRandomOrder()->first()->id;
         return [
             'name' => $this->faker->sentence,
             'ingredients' => $this->faker->paragraph,
@@ -27,6 +30,7 @@ class MealFactory extends Factory
             'delivery_status' => $this->faker->boolean,
             'image' => $this->faker->imageUrl(),
             'temperature'=>$this->faker->randomFloat(2, -20, 40),
+            'partner_id'=>$partnerId,
         ];
     }
 }
