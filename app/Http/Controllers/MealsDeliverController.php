@@ -36,7 +36,7 @@ class MealsDeliverController extends Controller
      public function partnerMealDeliveries($partnerId)
      {
          $partner = Partner::findOrFail($partnerId);
-         $mealDeliveries = MealDeliver::where('partner_id', $partnerId)->get();
+         $mealDeliveries = MealDeliver::where('partner_id', $partner)->get();
 
          return response()->json(['meal_deliveries' => $mealDeliveries]);
      }
@@ -45,7 +45,7 @@ class MealsDeliverController extends Controller
      public function volunteerMealDeliveries($volunteerId)
      {
          $volunteer = Volunteer::findOrFail($volunteerId);
-         $mealDeliveries = MealDeliver::where('volunteer_id', $volunteerId)->get();
+         $mealDeliveries = MealDeliver::where('volunteer_id', $volunteer)->get();
 
          return response()->json(['meal_deliveries' => $mealDeliveries]);
      }
