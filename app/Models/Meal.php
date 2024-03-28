@@ -18,6 +18,12 @@ class Meal extends Model
         'price',
         'is_frozen',
         'delivery_status',
-        'temperature'
+        'temperature',
+        'partner_id'
     ];
+
+    public function partner()
+    {
+        return $this->belongsTo(Partner::class);
+    }
 }

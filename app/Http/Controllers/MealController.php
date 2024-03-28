@@ -10,9 +10,9 @@ class MealController extends Controller
 {
     public function index()
     {
-        $meals = Meal::all();
+        $meals = Meal::with('partner')->get();
 
-        return response()->json(['meals' => $meals], 200);
+        return response()->json(['data' => $meals], 200);
     }
 
     public function show($id)
@@ -36,9 +36,11 @@ class MealController extends Controller
             'price' => 'required|numeric',
             'is_frozen' => 'required|boolean',
             'delivery_status' => 'required|boolean',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048', // Validate image upload
-            'temperature' => 'required'
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif',
+            'temperature' => 'required',
+
         ]);
+        $validatedData['partner_id'] = $request->input('partner_id');
 
         // Handle image upload
         $path = 'uploads/meals';
@@ -74,9 +76,10 @@ class MealController extends Controller
             'price' => 'required|numeric',
             'is_frozen' => 'required|boolean',
             'delivery_status' => 'required|boolean',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048', // Validate image upload
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif', // Validate image upload
             'temperature' => 'required'
         ]);
+
 
         // Handle image upload
         $path = 'uploads/meals';
@@ -93,6 +96,8 @@ class MealController extends Controller
             $validatedData['image'] = $filename;
         }
 
+        $validatedData['partner_id'] = $request->input('partner_id');
+        
         $meal->update($validatedData);
 
         return response()->json(['meal' => $meal], 200);

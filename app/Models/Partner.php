@@ -20,4 +20,10 @@ class Partner extends Model
     public function user(){
         return $this->belongsTo(User::class);
     }
+
+
+    public function meals()
+    {
+        return $this->hasMany(Meal::class);
+    }
 }

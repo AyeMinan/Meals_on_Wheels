@@ -23,6 +23,7 @@ return new class extends Migration
             $table->boolean('delivery_status')->default(false);
             $table->string('image')->nullable();
             $table->string('temperature');
+            $table->foreignId('partner_id')->nullable()->constrained('partners')->onDelete('set null');
             $table->timestamps();
         });
     }

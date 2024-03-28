@@ -67,7 +67,7 @@ class ProfileController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'name' => "required|string",
-            'image' => "required|image",
+            'image' => "image|nullable",
             'phone' => "required|string",
             'address' => "required|string",
         ]);
@@ -142,7 +142,7 @@ $profile->update([
     'name' => $request->input('name', $profile->name),
     'phone' => $request->input('phone', $profile->phone),
     'address' => $request->input('address', $profile->address),
-  
+
 ]);
 
 // Update user data
