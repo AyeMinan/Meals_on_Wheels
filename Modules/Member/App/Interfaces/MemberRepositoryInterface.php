@@ -5,7 +5,7 @@ namespace Modules\Member\App\Interfaces;
 use Illuminate\Http\Request;
 
 interface MemberRepositoryInterface{
-    public function storeMember($validatedData);
+    public function storeMember(Request $request, $validatedData);
 
     public function updateMember(Request $request, $id);
 

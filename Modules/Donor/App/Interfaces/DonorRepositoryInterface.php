@@ -5,7 +5,7 @@ use Illuminate\Http\Request;
 interface DonorRepositoryInterface {
 
     public function allDonor();
-    public function storeDonor($validatedData);
+    public function storeDonor(Request $request, $validatedData);
     public function deleteDonor($id);
 
     public function updateDonor(Request $request, $id);

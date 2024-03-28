@@ -18,7 +18,7 @@ class DonorRequest extends FormRequest
             'password' => ['required', 'min:8'],
             'confirm_password' => ['required', 'min:8'],
              'address' => 'required',
-             'image'=> 'required',
+             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
              'first_name' => ['required_if:type,donor|string'],
              'last_name' => ['required_if:type,donor|string'],
              'phone_number' => ['required_if:type,donor|string'],

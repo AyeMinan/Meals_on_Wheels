@@ -16,8 +16,10 @@ class Caregiver extends Model
         'confirm_password',
         'first_name',
         'last_name',
+        'date_of_birth',
         'relationship_with_member',
         'image',
+        'gender',
         'user_id'
     ];
 

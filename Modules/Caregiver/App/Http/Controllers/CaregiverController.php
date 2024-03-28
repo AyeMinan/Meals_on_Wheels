@@ -35,11 +35,11 @@ class CaregiverController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(CaregiverRequest $caregiverRequest)
+    public function store(Request $request, CaregiverRequest $caregiverRequest)
     {
         $validatedData = $caregiverRequest->validated();
 
-        $this->caregiverService->storeCaregiver($validatedData);
+        $this->caregiverService->storeCaregiver($request, $validatedData);
 
         return response()->json("Caregiver has been successfully created");
     }
@@ -74,7 +74,7 @@ class CaregiverController extends Controller
             "message" => "Date updated"
         ],200);
     } catch (Exception $e) {
-        Log::channel('sora_error_log')->error("Caregiver Delete Error" . $e->getMessage());
+        Log::channel('sora_error_log')->error("Caregiver Update Error" . $e->getMessage());
         return response()->json([
             'message' => $e->getMessage(),
         ], 500);

@@ -40,12 +40,12 @@ class DonorController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(DonorRequest $donorRequest)
+    public function store(Request $request, DonorRequest $donorRequest)
 
     {
         $validatedData = $donorRequest->validated();
 
-        $this->donorService->storeDonor($validatedData);
+        $this->donorService->storeDonor($request, $validatedData);
 
         return response()->json("Donor has been created succesfully");
 
