@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\MemberController;
 use App\Http\Controllers\PartnerController;
+use App\Http\Controllers\StripeController;
 use App\Http\Controllers\VolunteerController;
 use Illuminate\Routing\Router;
 
@@ -36,20 +37,23 @@ Route::middleware(['auth:sanctum'])->group(function () {
       Route::post('/profile', [ProfileController::class, 'store'])->name('profiles.store');
       Route::put('/profile/{id}', [ProfileController::class, 'update'])->name('profiles.update');
       Route::delete('/profile/{id}', [ProfileController::class, 'destroy'])->name('profiles.destroy');
+
+
+
 });
 
+Route::get('/checkout', [StripeController::class, 'checkout']);
+Route::post('/purchase', [StripeController::class, 'purchase']);
+Route::get('/success', [StripeController::class, 'success']);
 
 
 
 //meal
 Route::controller(MealController::class)->group(function(){
-    Route::get('/meals','index')->middleware('auth:sanctum');
+    Route::get('/meals','index');
+    Route::get('/showPartnerMeals', 'showPartnerMeals');
     Route::post('/meal','store');
-<<<<<<< HEAD
-    Route::get('/meal/{meal}','show')->middleware('admin');
-=======
     Route::get('/meal/{meal}','show');
->>>>>>> amh
     Route::put('/meal/{meal}','update');
     Route::delete('/meal/{meal}','destroy');
 });

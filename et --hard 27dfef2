@@ -1,0 +1,38 @@
+[33m8454940[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mdevelop[m[33m, [m[1;31morigin/develop[m[33m)[m HEAD@{0}: pull: Fast-forward
+[33mdc165ae[m HEAD@{1}: checkout: moving from amh to develop
+[33m8ae0924[m[33m ([m[1;31morigin/amh[m[33m, [m[1;32mamh[m[33m)[m HEAD@{2}: commit: Error Fixation of Users
+[33mdc165ae[m HEAD@{3}: merge develop: Fast-forward
+[33m1a35d3b[m HEAD@{4}: checkout: moving from develop to amh
+[33mdc165ae[m HEAD@{5}: pull: Merge made by the 'ort' strategy.
+[33m3b95991[m HEAD@{6}: merge amh: Merge made by the 'ort' strategy.
+[33m27dfef2[m HEAD@{7}: checkout: moving from amh to develop
+[33m1a35d3b[m HEAD@{8}: commit: Food Safety Management
+[33m20281e2[m HEAD@{9}: checkout: moving from amh to amh
+[33m20281e2[m HEAD@{10}: checkout: moving from develop to amh
+[33m27dfef2[m HEAD@{11}: pull: Merge made by the 'ort' strategy.
+[33m20281e2[m HEAD@{12}: merge amh: Fast-forward
+[33mefd9fa9[m HEAD@{13}: checkout: moving from amh to develop
+[33m20281e2[m HEAD@{14}: commit: DB transaction in authController
+[33mefd9fa9[m HEAD@{15}: merge develop: Fast-forward
+[33m9242da5[m HEAD@{16}: checkout: moving from develop to amh
+[33mefd9fa9[m HEAD@{17}: merge amh: Merge made by the 'ort' strategy.
+[33m0dbcf0b[m HEAD@{18}: checkout: moving from amh to develop
+[33m9242da5[m HEAD@{19}: commit: Database columns changes
+[33m9be4af3[m HEAD@{20}: checkout: moving from develop to amh
+[33m0dbcf0b[m HEAD@{21}: merge amh: Merge made by the 'ort' strategy.
+[33m439faef[m HEAD@{22}: checkout: moving from amh to develop
+[33m9be4af3[m HEAD@{23}: commit: Donor CRUD for admin
+[33m439faef[m HEAD@{24}: pull origin develop: Fast-forward
+[33mbc58d66[m HEAD@{25}: checkout: moving from develop to amh
+[33m439faef[m HEAD@{26}: pull: Fast-forward
+[33md7c17c5[m HEAD@{27}: checkout: moving from amh to develop
+[33mbc58d66[m HEAD@{28}: checkout: moving from develop to amh
+[33md7c17c5[m HEAD@{29}: merge amh: Merge made by the 'ort' strategy.
+[33m9a917bf[m[33m ([m[1;31morigin/master[m[33m, [m[1;31morigin/main[m[33m, [m[1;32mmain[m[33m)[m HEAD@{30}: checkout: moving from amh to develop
+[33mbc58d66[m HEAD@{31}: commit: member & caregiver CRUD for admin
+[33md394f15[m HEAD@{32}: commit (merge): Merge branch 'develop' of https://github.com/AyeMinan/Meals_on_Wheels into amh
+[33m5693f87[m HEAD@{33}: commit: user register
+[33m9a917bf[m[33m ([m[1;31morigin/master[m[33m, [m[1;31morigin/main[m[33m, [m[1;32mmain[m[33m)[m HEAD@{34}: checkout: moving from develop to amh
+[33m9a917bf[m[33m ([m[1;31morigin/master[m[33m, [m[1;31morigin/main[m[33m, [m[1;32mmain[m[33m)[m HEAD@{35}: checkout: moving from main to develop
+[33m9a917bf[m[33m ([m[1;31morigin/master[m[33m, [m[1;31morigin/main[m[33m, [m[1;32mmain[m[33m)[m HEAD@{36}: Branch: renamed refs/heads/master to refs/heads/main
+[33m9a917bf[m[33m ([m[1;31morigin/master[m[33m, [m[1;31morigin/main[m[33m, [m[1;32mmain[m[33m)[m HEAD@{38}: commit (initial): initial commit

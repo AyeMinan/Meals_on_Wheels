@@ -3,10 +3,6 @@
 namespace Modules\Donor\App\Models;
 
 use App\Models\Donor;
-<<<<<<< HEAD
-
-=======
->>>>>>> amh
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Modules\Donor\Database\factories\DonationFactory;

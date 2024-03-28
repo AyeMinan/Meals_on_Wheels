@@ -10,9 +10,13 @@ class MealController extends Controller
 {
     public function index()
     {
-        $meals = Meal::with('partner')->get();
+        $meals = Meal::all();
 
         return response()->json(['data' => $meals], 200);
+    }
+    public function showPartnerMeals(){
+        $partnerMeals = Meal::with('partner')->get();
+        return response()->json(['data' => $partnerMeals], 200);
     }
 
     public function show($id)
@@ -97,7 +101,7 @@ class MealController extends Controller
         }
 
         $validatedData['partner_id'] = $request->input('partner_id');
-        
+
         $meal->update($validatedData);
 
         return response()->json(['meal' => $meal], 200);
