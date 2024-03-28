@@ -6,14 +6,15 @@ use App\Models\Member;
 use App\Models\Profile;
 use App\Models\User;
 use Exception;
-use GuzzleHttp\Psr7\Request;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Hash;
 use Modules\Member\App\Interfaces\MemberRepositoryInterface;
 
 class MemberRepository implements MemberRepositoryInterface
 {
-    public function storeMember($validatedData){
+    public function storeMember(Request $request, $validatedData){
         // dd($validatedData);
             try{
                 DB::beginTransaction();
@@ -38,6 +39,14 @@ class MemberRepository implements MemberRepositoryInterface
 
             ]);
 
+            $path = 'uploads/profile';
+            if ($request->hasFile('image')) {
+                $file = $request->file('image');
+                $ext = $file->getClientOriginalExtension();
+                $filename = time() . '.' . $ext;
+                $file->move($path, $filename);
+                $profile->image = $filename;
+            }
             // // Associate the profile with the user
             $user->profile()->save($profile);
 
@@ -90,6 +99,20 @@ class MemberRepository implements MemberRepositoryInterface
         $memberProfile->image = $request['image'];
         $memberProfile->address = $request['address'];
         $memberProfile->phone_number = $request['phone_number'];
+
+        $path = 'uploads/profile';
+        if ($request->hasFile('image')) {
+            // Delete old image
+            if ($memberProfile->image && File::exists($path . '/' . $memberProfile->image)) {
+                File::delete($path . '/' . $memberProfile->image);
+            }
+
+            $file = $request->file('image');
+            $ext = $file->getClientOriginalExtension();
+            $filename = time() . '.' . $ext;
+            $file->move($path, $filename);
+            $memberProfile->image = $filename;
+        }
 
         $memberProfile->save();
 

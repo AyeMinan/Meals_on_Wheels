@@ -7,6 +7,8 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Modules\Donor\App\Interfaces\DonorRepositoryInterface;
 use App\Models\User;
+use Illuminate\Support\Facades\File;
+
 class DonorRepository implements DonorRepositoryInterface{
 
 
@@ -16,7 +18,7 @@ class DonorRepository implements DonorRepositoryInterface{
         return $donors;
     }
 
-    public function storeDonor($validatedData){
+    public function storeDonor($request, $validatedData){
 
         try{
             DB::beginTransaction();
@@ -40,6 +42,14 @@ class DonorRepository implements DonorRepositoryInterface{
             'phone_number' => $validatedData['phone_number'],
             'address' =>$validatedData['address'],
         ]);
+        $path = 'uploads/profile';
+        if ($request->hasFile('image')) {
+            $file = $request->file('image');
+            $ext = $file->getClientOriginalExtension();
+            $filename = time() . '.' . $ext;
+            $file->move($path, $filename);
+            $profile->image = $filename;
+        }
 
         // Associate the profile with the user
         $user->profile()->save($profile);
@@ -108,13 +118,26 @@ class DonorRepository implements DonorRepositoryInterface{
             $donorUser->save();
 
                 if ($donorProfile) {
-                    $donorProfile->update([
-                        'image'=> $request->image,
-                        'user_name'=> $request->user_name,
-                        'address'=> $request->address,
-                        'phone_number'=> $request->phone_number,
-                    ]);
+                        $donorProfile->image = $request->image;
+                        $donorProfile->user_name= $request->user_name;
+                        $donorProfile->address = $request->address;
+                        $donorProfile->phone_number = $request->phone_number;
+
+                    $path = 'uploads/profile';
+                    if ($request->hasFile('image')) {
+                        // Delete old image
+                        if ($donorProfile->image && File::exists($path . '/' . $donorProfile->image)) {
+                            File::delete($path . '/' . $donorProfile->image);
+                        }
+
+                        $file = $request->file('image');
+                        $ext = $file->getClientOriginalExtension();
+                        $filename = time() . '.' . $ext;
+                        $file->move($path, $filename);
+                        $donorProfile->image = $filename;
+                    }
                 }
+                $donorProfile->save();
                 return response()->json(['message' => 'Donor updated successfully'], 200);
             } catch(\Exception $e) {
                 return response()->json(['message' => 'Failed to update donor'], 500);

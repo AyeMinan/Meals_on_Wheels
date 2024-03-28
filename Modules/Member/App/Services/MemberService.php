@@ -12,8 +12,8 @@ class MemberService
         $this->memberRepository = $memberRepositoryInterface;
     }
 
-    public function storeMember($validatedData){
-        return $this->memberRepository->storeMember($validatedData);
+    public function storeMember($request, $validatedData){
+        return $this->memberRepository->storeMember($request, $validatedData);
     }
 
     public function updateMember($request, $id){

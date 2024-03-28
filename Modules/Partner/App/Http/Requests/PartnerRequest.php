@@ -12,6 +12,15 @@ class PartnerRequest extends FormRequest
     public function rules(): array
     {
         return [
+            'email' => 'required|email|unique:volunteers,email,' . $this->partner,
+            'user_name' => 'required|string|max:255',
+            'password' => 'required|string|min:8|confirmed',
+            'confirm_password' => 'required|string|min:8|confirmed',
+            'phone_number' => 'required|string|max:20',
+            'address' => 'required|string',
+            'image' => 'nullable|image|max:2048',
+            'first_name' => 'required',
+            'last_name' => 'required',
             'shop_name'=>'required',
             'shop_address'=>'required',
 

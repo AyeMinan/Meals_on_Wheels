@@ -5,7 +5,7 @@ namespace Modules\Caregiver\App\Interfaces;
 use Illuminate\Http\Request;
 
 interface CaregiverRepositoryInterface{
-    public function storeCaregiver($validatedData);
+    public function storeCaregiver(Request $request, $validatedData);
 
     public function updateCaregiver(Request $request, $id);
 

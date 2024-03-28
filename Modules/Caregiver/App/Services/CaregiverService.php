@@ -13,8 +13,8 @@ class CaregiverService
         $this->caregiverRepository = $caregiverRepositoryInterface;
     }
 
-    public function storeCaregiver($validatedData){
-        return $this->caregiverRepository->storeCaregiver($validatedData);
+    public function storeCaregiver($request, $validatedData){
+        return $this->caregiverRepository->storeCaregiver($request, $validatedData);
     }
 
     public function updateCaregiver($request, $id){

@@ -45,7 +45,11 @@ Route::middleware(['auth:sanctum'])->group(function () {
 Route::controller(MealController::class)->group(function(){
     Route::get('/meals','index')->middleware('auth:sanctum');
     Route::post('/meal','store');
+<<<<<<< HEAD
     Route::get('/meal/{meal}','show')->middleware('admin');
+=======
+    Route::get('/meal/{meal}','show');
+>>>>>>> amh
     Route::put('/meal/{meal}','update');
     Route::delete('/meal/{meal}','destroy');
 });

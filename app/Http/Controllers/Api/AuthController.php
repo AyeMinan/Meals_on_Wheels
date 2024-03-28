@@ -66,10 +66,17 @@ class AuthController extends Controller
             'address' => $request->address,
             'phone_number' => $request->phone_number,
         ]);
-
+        $path = 'uploads/profile';
         if ($request->hasFile('image')) {
-            $profile->image = $request->file('image')->store('images');
+            $file = $request->file('image');
+            $ext = $file->getClientOriginalExtension();
+            $filename = time() . '.' . $ext;
+            $file->move($path, $filename);
+            $profile->image = $filename;
         }
+        // if ($request->hasFile('image')) {
+        //     $profile->image = '/storage/'. $request->file('image')->store('images');
+        // }
 
         // Associate the profile with the user
         $user->profile()->save($profile);
@@ -120,7 +127,7 @@ class AuthController extends Controller
                     'gender' => $request->gender,
                     'date_of_birth' => $request->date_of_birth,
                 ]);
-           
+
                 $user->volunteer()->save($volunteer);
                 break;
 

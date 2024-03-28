@@ -34,14 +34,14 @@ class MemberController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(MemberRequest $memberRequest)
+    public function store(Request $request, MemberRequest $memberRequest)
     {
         $startTime = microtime(true);
 
         try{
             $validatedData = $memberRequest->validated();
 
-            $this->memberService->storeMember($validatedData);
+            $this->memberService->storeMember($request, $validatedData);
 
             return response()->json([
                 "message" => "Member has been successfully created"
