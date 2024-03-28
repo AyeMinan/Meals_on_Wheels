@@ -38,12 +38,10 @@ Route::middleware(['auth:sanctum'])->group(function () {
       Route::delete('/profile/{id}', [ProfileController::class, 'destroy'])->name('profiles.destroy');
 });
 
-
-
-
 //meal
 Route::controller(MealController::class)->group(function(){
     Route::get('/meals','index')->middleware('auth:sanctum');
+<<<<<<< HEAD
     Route::post('/meal','store');
 <<<<<<< HEAD
     Route::get('/meal/{meal}','show')->middleware('admin');
@@ -52,6 +50,12 @@ Route::controller(MealController::class)->group(function(){
 >>>>>>> amh
     Route::put('/meal/{meal}','update');
     Route::delete('/meal/{meal}','destroy');
+=======
+    Route::post('/meal','store')->middleware(['auth:sanctum','admin']);
+    Route::get('/meal/{meal}','show')->middleware('auth:sanctum');
+    Route::put('/meal/{meal}','update')->middleware(['auth:sanctum','admin']);
+    Route::delete('/meal/{meal}','destroy')->middleware(['auth:sanctum','admin']);
+>>>>>>> b35c4a680d2a0d0b02633842b8d296442cd3baf3
 });
 
 

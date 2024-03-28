@@ -21,13 +21,14 @@ class DatabaseSeeder extends Seeder
 
         $this->call([
 
-            MealSeeder::class,
+
             MemberSeeder::class,
             DonorSeeder::class,
             CaregiverSeeder::class,
             VolunteerSeeder::class,
             ProfileSeeder::class,
             PartnerSeeder::class,
+            MealSeeder::class,
         ]);
     }
 }
