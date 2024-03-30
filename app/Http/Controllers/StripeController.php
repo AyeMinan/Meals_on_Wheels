@@ -11,7 +11,7 @@ class StripeController extends Controller
     public function checkout(){
         return "Card Info Request Page";
     }
-    public function purchase(Request $request){
+    public function payment(Request $request){
         try {
             $stripe = new \Stripe\StripeClient(env('STRIPE_SK'));
 
@@ -19,7 +19,7 @@ class StripeController extends Controller
 
             // Create a charge using the token
             $response = $stripe->charges->create([
-                'amount' => $request->price,
+                'amount' => $request->amount,
                 'currency' => 'usd',
                 'source' => 'tok_visa',
             ]);

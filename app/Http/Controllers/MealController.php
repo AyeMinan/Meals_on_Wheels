@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Meal;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
 
@@ -32,6 +33,9 @@ class MealController extends Controller
     }
     public function store(Request $request)
     {
+
+        $user = auth()->user();
+
         $validatedData = $request->validate([
             'name' => 'required',
             'ingredients' => 'required',
@@ -41,11 +45,18 @@ class MealController extends Controller
             'price' => 'required|numeric',
             'is_frozen' => 'required|boolean',
             'delivery_status' => 'required|boolean',
+            'is_preparing' => 'required|boolean',
+            'is_finished' => 'required|boolean',
+            'is_pickup' => 'required|boolean',
+            'is_delivered' => 'required|boolean',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif',
             'temperature' => 'required',
 
         ]);
-        $validatedData['partner_id'] = $request->input('partner_id');
+
+        if($user && $user->type === 'partner'){
+        $validatedData['partner_id'] = $user->id;
+    }
 
         // Handle image upload
         $path = 'uploads/meals';
@@ -67,7 +78,7 @@ class MealController extends Controller
     public function update(Request $request, $id)
     {
         $meal = Meal::find($id);
-
+        $user = auth()->user();
         if (!$meal) {
             return response()->json(['error' => 'Meal not found'], 404);
         }
@@ -81,6 +92,10 @@ class MealController extends Controller
             'price' => 'required|numeric',
             'is_frozen' => 'required|boolean',
             'delivery_status' => 'required|boolean',
+            'is_preparing' => 'required|boolean',
+            'is_finished' => 'required|boolean',
+            'is_pickup' => 'required|boolean',
+            'is_delivered' => 'required|boolean',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif', // Validate image upload
             'temperature' => 'required'
         ]);
@@ -101,7 +116,9 @@ class MealController extends Controller
             $validatedData['image'] = $filename;
         }
 
-        $validatedData['partner_id'] = $request->input('partner_id');
+        if($user && $user->type === 'partner'){
+            $validatedData['partner_id'] = $user->id;
+        }
 
         $meal->update($validatedData);
 

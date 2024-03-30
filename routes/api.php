@@ -9,6 +9,7 @@ use App\Http\Controllers\ProfileController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\MemberController;
+use App\Http\Controllers\OrderController;
 use App\Http\Controllers\PartnerController;
 use App\Http\Controllers\StripeController;
 use App\Http\Controllers\VolunteerController;
@@ -38,14 +39,21 @@ Route::middleware(['auth:sanctum'])->group(function () {
       Route::put('/profile/{id}', [ProfileController::class, 'update'])->name('profiles.update');
       Route::delete('/profile/{id}', [ProfileController::class, 'destroy'])->name('profiles.destroy');
 
+      Route::get('/checkout', [StripeController::class, 'checkout']);
+      Route::post('/payment', [StripeController::class, 'payment']);
+      Route::get('/success', [StripeController::class, 'success']);
+
+
+      Route::get('/orders', [OrderController::class, 'index']);
+      Route::post('/order', [OrderController::class, 'store']);
+      Route::get('/order/{order}', [OrderController::class, 'show']);
+      Route::put('/order/{order}', [OrderController::class, 'update']);
+      Route::delete('/order/{order}', [OrderController::class, 'destory']);
 
 
 });
 
 
-Route::get('/checkout', [StripeController::class, 'checkout']);
-Route::post('/purchase', [StripeController::class, 'purchase']);
-Route::get('/success', [StripeController::class, 'success']);
 
 
 //meal
@@ -59,11 +67,11 @@ Route::controller(MealController::class)->group(function(){
     // Route::delete('/meal/{meal}','destroy');
 
     Route::get('/meals','index')->middleware('auth:sanctum');
-    Route::get('/showPartnerMeals', 'showPartnerMeals')->middleware('auth:sanctum', 'admin');
-    Route::post('/meal','store')->middleware(['auth:sanctum','admin']);
+    Route::get('/showPartnerMeals', 'showPartnerMeals')->middleware('auth:sanctum');
+    Route::post('/meal','store')->middleware(['auth:sanctum', 'partner']);
     Route::get('/meal/{meal}','show')->middleware('auth:sanctum');
-    Route::put('/meal/{meal}','update')->middleware(['auth:sanctum','admin']);
-    Route::delete('/meal/{meal}','destroy')->middleware(['auth:sanctum','admin']);
+    Route::put('/meal/{meal}','update')->middleware(['auth:sanctum', 'partner']);
+    Route::delete('/meal/{meal}','destroy')->middleware(['auth:sanctum','partner']);
 
 });
 
