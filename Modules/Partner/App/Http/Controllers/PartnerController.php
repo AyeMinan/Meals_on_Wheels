@@ -9,18 +9,18 @@ use Modules\Partner\App\Service\PartnerService;
 
 class PartnerController extends Controller
 {
-    protected $partnerRepository;
-    public function __construct(PartnerService $partnerRepository){
-        $this->partnerRepository=$partnerRepository;
+    protected $partnerService;
+    public function __construct(PartnerService $partnerService){
+        $this->partnerService=$partnerService;
     }
     public function index()
     {
-        $partners=$this->partnerRepository->allPartner();
+        [$partner, $partnerProfile] = $this->partnerService->allPartner();
         return response()->json([
-            'success'=>true,
-            'partner'=>$partners,
             'token'=>csrf_token(),
-        ]);
+            "partner" => $partner,
+            "Profile" => $partnerProfile
+        ],200);;
     }
 
 
@@ -28,7 +28,7 @@ class PartnerController extends Controller
     public function store(PartnerRequest $request)
     {
         $validatedData=$request->validated();
-        $partner=$this->partnerRepository->storePartner($validatedData);
+        $partner=$this->partnerService->storePartner($validatedData);
         return response()->json([
             'success'=>true,
             'partner'=>$partner,
@@ -38,18 +38,19 @@ class PartnerController extends Controller
 
     public function show($id)
     {
-        $partner=$this->partnerRepository->showPartner($id);
+        $partner=$this->partnerService->showPartner($id);
         return response()->json([
+            'token'=>csrf_token(),
             'success'=>true,
             'partner'=>$partner,
-            'token'=>csrf_token(),
+
         ]);
     }
 
     public function update(PartnerRequest $request, $id)
     {
         $validatedData=$request->validated();
-        $partner=$this->partnerRepository->updatePartner($id,$validatedData);
+        $partner=$this->partnerService->updatePartner($id,$validatedData);
         return response()->json([
             'success'=>true,
             'partner'=>$partner,
@@ -61,7 +62,7 @@ class PartnerController extends Controller
      */
     public function destroy($id)
     {
-        $partner=$this->partnerRepository->deletePartner($id);
-        return response()->json(['success'=>true]);
+        $partner=$this->partnerService->deletePartner($id);
+        return response()->json(['success'=>true, "message" => "Partner deleted Successful"]);
     }
 }

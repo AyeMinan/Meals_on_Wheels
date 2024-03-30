@@ -13,6 +13,10 @@ class CaregiverService
         $this->caregiverRepository = $caregiverRepositoryInterface;
     }
 
+
+    public function getAllCaregivers(){
+        return $this->caregiverRepository->getAllCaregivers();
+    }
     public function storeCaregiver($request, $validatedData){
         return $this->caregiverRepository->storeCaregiver($request, $validatedData);
     }

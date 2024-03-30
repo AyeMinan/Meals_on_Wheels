@@ -16,6 +16,9 @@ class DonorService{
         return $this->donorRepository->allDonor();
     }
 
+    public function allDonor(){
+        return $this->donorRepository->allDonor();
+    }
     public function storeDonor($request, $validatedData){
         return $this->donorRepository->storeDonor($request, $validatedData);
     }

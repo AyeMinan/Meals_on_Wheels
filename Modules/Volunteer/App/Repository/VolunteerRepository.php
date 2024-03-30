@@ -12,8 +12,15 @@ class VolunteerRepository implements VolunteerInterface
 {
 
     public function all(){
-        $volunteers=Volunteer::all();
-        return $volunteers;
+        $volunteer = Volunteer::with('user')->get();
+        $volunteerUsers = User::where('type', 'volunteer')->get();
+        foreach($volunteerUsers as $volunteerUser){
+            $profile = Profile::where('user_id', $volunteerUser->id)->get();
+            if ($profile) {
+                $volunteerProfile[] = $profile;
+            }
+        }
+  return [$volunteer, $volunteerProfile];
 
     }
     public function getById($id){

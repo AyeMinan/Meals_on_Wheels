@@ -14,6 +14,19 @@ use Modules\Member\App\Interfaces\MemberRepositoryInterface;
 
 class MemberRepository implements MemberRepositoryInterface
 {
+
+    public function getAllMembers(){
+
+            $member = Member::with('user')->get();
+            $memberUsers = User::where('type', 'member')->get();
+            foreach($memberUsers as $memberUser){
+                $profile = Profile::where('user_id', $memberUser->id)->get();
+                if ($profile) {
+                    $memberProfile[] = $profile;
+                }
+            }
+      return [$member, $memberProfile];
+    }
     public function storeMember(Request $request, $validatedData){
         // dd($validatedData);
             try{

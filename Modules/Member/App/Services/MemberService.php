@@ -12,6 +12,9 @@ class MemberService
         $this->memberRepository = $memberRepositoryInterface;
     }
 
+    public function getAllMembers(){
+        return $this->memberRepository->getallMembers();
+    }
     public function storeMember($request, $validatedData){
         return $this->memberRepository->storeMember($request, $validatedData);
     }

@@ -16,6 +16,20 @@ use Modules\Caregiver\App\Interfaces\CaregiverRepositoryInterface;
 
 class CaregiverRepository implements CaregiverRepositoryInterface
 {
+
+    public function getAllCaregivers(){
+        
+            $caregiver = caregiver::with('user')->get();
+            $caregiverUsers = User::where('type', 'caregiver')->get();
+            foreach($caregiverUsers as $caregiverUser){
+                $profile = Profile::where('user_id', $caregiverUser->id)->get();
+                if ($profile) {
+                    $caregiverProfile[] = $profile;
+                }
+
+        }
+      return [$caregiver, $caregiverProfile];
+    }
     public function storeCaregiver(Request $request, $validatedData){
 
         // dd($validatedData);
