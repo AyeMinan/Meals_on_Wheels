@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Order;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class OrderController extends Controller
@@ -10,11 +11,22 @@ class OrderController extends Controller
 
     public function index(){
         $user = auth()->user();
-        $orders = Order::where('orderer_id', $user->id)->get();
 
+        $currentTime = Carbon::now();
+
+        $aDayAgo = $currentTime->subHours(24);
+
+        $orders = Order::where('orderer_id', $user->id)->where('created_at', '>=', $aDayAgo)->get();
+
+        if($orders->isEmpty()){
+            return response()->json([
+                "message" => "No Valid Orders"
+            ],404);
+        }else{
         return response()->json([
             "Orders" => $orders
         ],200);
+    }
     }
     public function store(Request $request){
 
@@ -63,9 +75,13 @@ class OrderController extends Controller
 }
 
 public function show($id){
-    $order = Order::find($id);
+    $currentTime = Carbon::now();
 
-    if (!$order) {
+    $aDayAgo = $currentTime->subHours(24);
+
+    $order = Order::where('id',$id)->where('created_at', '>=' ,$aDayAgo)->first();
+
+    if ($order == null) {
         return response()->json(['error' => 'order not found'], 404);
     }
 
