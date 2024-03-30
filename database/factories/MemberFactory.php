@@ -23,7 +23,14 @@ class MemberFactory extends Factory
             'date_of_birth' => $this->faker->date,
             'dietary_restriction' => $this->faker->randomElement(['Vegetarian', 'Vegan', 'Gluten-Free']),
             'user_id' => function () {
-                return \App\Models\User::factory()->create()->id;
+                $user = \App\Models\User::where('type', 'member')->first();
+
+                // If a user with 'member' type is not found, create one
+                if (!$user) {
+                    $user = \App\Models\User::factory()->create(['type' => 'member']);
+                }
+
+                return $user->id;
             },
 
         ];

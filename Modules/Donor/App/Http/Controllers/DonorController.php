@@ -21,12 +21,12 @@ class DonorController extends Controller
    }
     public function index()
     {
-        $donors=$this->donorService->index();
-
+        [$donor, $donorProfile] = $this->donorService->allDonor();
         return response()->json([
-            'donors'=>$donors,
-            'csrf'=>csrf_token()
-        ]) ;
+            "CSRF Token" => csrf_token(),
+            "donor" => $donor,
+            "Profile" => $donorProfile
+        ],200);
     }
 
     /**

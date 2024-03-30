@@ -14,6 +14,8 @@ class PartnerService
     {
         return $this->parterRepository->all();
     }
+
+    
     public function storePartner($attributes){
         return $this->parterRepository->create($attributes);
     }
