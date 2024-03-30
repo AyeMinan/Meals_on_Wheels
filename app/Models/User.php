@@ -8,7 +8,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use App\Models\Caregiver;
-use Modules\Partner\App\Models\Partner;
+
 
 class User extends Authenticatable
 {
@@ -56,9 +56,9 @@ class User extends Authenticatable
         return $this->hasOne(Caregiver::class);
     }
 
-    // public function partner(){
-    //     return $this->hasOne(Partner::class);
-    // }
+    public function partner(){
+        return $this->hasOne(Partner::class);
+    }
     public function volunteer(){
         return $this->hasOne(Volunteer::class);
 
