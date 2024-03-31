@@ -53,36 +53,18 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
 });
 
-<<<<<<< HEAD
-=======
 
 
 
->>>>>>> amh
 //meal
 Route::controller(MealController::class)->group(function(){
-
-    // Route::get('/meals','index');
-    // Route::get('/showPartnerMeals', 'showPartnerMeals');
-    // Route::post('/meal','store');
-    // Route::get('/meal/{meal}','show');
-    // Route::put('/meal/{meal}','update');
-    // Route::delete('/meal/{meal}','destroy');
-
     Route::get('/meals','index')->middleware('auth:sanctum');
-<<<<<<< HEAD
-    Route::post('/meal','store')->middleware(['auth:sanctum','admin']);
-    Route::get('/meal/{meal}','show')->middleware('auth:sanctum');
-    Route::put('/meal/{meal}','update')->middleware(['auth:sanctum','admin']);
-    Route::delete('/meal/{meal}','destroy')->middleware(['auth:sanctum','admin']);
-=======
     Route::get('/showPartnerMeals', 'showPartnerMeals')->middleware('auth:sanctum');
     Route::post('/meal','store')->middleware(['auth:sanctum', 'partner']);
     Route::get('/meal/{meal}','show')->middleware('auth:sanctum');
     Route::put('/meal/{meal}','update')->middleware(['auth:sanctum', 'partner']);
     Route::delete('/meal/{meal}','destroy')->middleware(['auth:sanctum','partner']);
 
->>>>>>> amh
 });
 
 
