@@ -38,6 +38,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
       Route::post('/profile', [ProfileController::class, 'store'])->name('profiles.store');
       Route::put('/profile/{id}', [ProfileController::class, 'update'])->name('profiles.update');
       Route::delete('/profile/{id}', [ProfileController::class, 'destroy'])->name('profiles.destroy');
+      Route::post('/profile/upload', [ProfileController::class, 'upload']);
 
       Route::get('/checkout', [StripeController::class, 'checkout']);
       Route::post('/payment', [StripeController::class, 'payment']);
@@ -49,7 +50,8 @@ Route::middleware(['auth:sanctum'])->group(function () {
       Route::get('/order/{order}', [OrderController::class, 'show']);
       Route::put('/order/{order}', [OrderController::class, 'update']);
       Route::delete('/order/{order}', [OrderController::class, 'destory']);
-
+      
+      Route::post('/order/upload', [OrderController::class, 'upload']);
 
 });
 
@@ -64,6 +66,7 @@ Route::controller(MealController::class)->group(function(){
     Route::get('/meal/{meal}','show')->middleware('auth:sanctum');
     Route::put('/meal/{meal}','update')->middleware(['auth:sanctum', 'partner']);
     Route::delete('/meal/{meal}','destroy')->middleware(['auth:sanctum','partner']);
+    Route::post('/meal/upload', 'upload')->middleware(['auth:sanctum', 'partner']);
 
 });
 

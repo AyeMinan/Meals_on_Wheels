@@ -66,9 +66,9 @@ class ProfileController extends Controller
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'name' => "required|string",
+            'user_name' => "required|string",
             'image' => "image|nullable",
-            'phone' => "required|string",
+            'phone_number' => "required|string",
             'address' => "required|string",
         ]);
 
@@ -81,8 +81,8 @@ class ProfileController extends Controller
         $userId = Auth::id();
 
         $profile = new Profile();
-        $profile->name = $request->name;
-        $profile->phone = $request->phone;
+        $profile->user_name = $request->user_name;
+        $profile->phone_number = $request->phone_number;
         $profile->address = $request->address;
         $profile->user_id = $userId;
 
@@ -120,34 +120,35 @@ class ProfileController extends Controller
 
        // Validate request
     $validator = Validator::make($request->all(), [
-        'name' => 'string|nullable',
-        'image' => 'image|nullable',
-        'phone' => 'string|nullable',
-        'address' => 'string|nullable',
-        'age' => 'integer|required_if:type,member|nullable',
-        'health_condition' => 'string|required_if:type,member|nullable',
-        'dietary_requirements' => 'string|required_if:type,member|nullable',
-        'contact_information' => 'string|required_if:type,caregiver,partner,volunteer|nullable',
-        'relationship_to_member' => 'string|required_if:type,caregiver|nullable',
-        'partner_type' => 'string|required_if:type,partner|nullable',
-        'location' => 'string|required_if:type,partner|nullable',
-        'volunteer_type' => 'string|required_if:type,volunteer|nullable',
-        'availability' => 'string|required_if:type,volunteer|nullable',
-        'donation_amount' => 'numeric|required_if:type,donor|nullable',
-        'donation_date' => 'date|required_if:type,donor|nullable',
+            'user_name' => 'required',
+            'email' => ['required', 'unique:users,email', 'email'],
+            'password' => ['required', 'min:8'],
+            'confirm_password' => ['required', 'min:8'],
+            'type' => 'required|string|in:member,caregiver,partner,volunteer,donor',
+            'age' => 'required_if:type,member|integer',
+            'phone_number' => 'required|string',
+            'date_of_birth' => 'required_if:type,member,volunteer|date',
+            'address' => 'required|string',
+            'gender' => 'required_if:type,member,volunteer|in:male,female,other',
+            'emergency_contact_number' => 'required_if:type,member|string',
+            'dietary_restriction' => 'required_if:type,member|string',
+            'relationship_with_member' => 'required_if:type,caregiver|string',
+            'shop_name' => 'required_if:type,partner|string',
+            'shop_address' => 'required_if:type,partner|string',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
     ]);
 
        // Update profile data
 $profile->update([
-    'name' => $request->input('name', $profile->name),
-    'phone' => $request->input('phone', $profile->phone),
+    'user_name' => $request->input('user_name', $profile->name),
+    'phone_number' => $request->input('phone_number', $profile->phone),
     'address' => $request->input('address', $profile->address),
 
 ]);
 
 // Update user data
 $profile->user->update([
-    'name' => $request->input('user.name', $profile->user->name),
+    'user_name' => $request->input('user.user_name', $profile->user->user_name),
     'email' => $request->input('user.email', $profile->user->email),
     'password' => bcrypt($request->input('user.password', $profile->user->password)), // Update password if needed
     'type' => $request->input('user.type', $profile->user->type),
@@ -191,7 +192,7 @@ switch ($profile->user->type) {
             case 'volunteer':
                 if ($profile->user->volunteer) {
                     $profile->user->volunteer->update([
-                        'volunteer_type' => $request->input('volunteer_type', $profile->user->volunteer->volunteer_type),
+                'volunteer_type' => $request->input('volunteer_type', $profile->user->volunteer->volunteer_type),
                 'availability' => $request->input('availability', $profile->user->volunteer->availability),
                     ]);
                 }
@@ -206,21 +207,6 @@ switch ($profile->user->type) {
                     ]);
                 }
                 break;
-        }
-
-        // Update image
-        $path = 'uploads/profile';
-        if ($request->hasFile('image')) {
-            // Delete old image
-            if ($profile->image && File::exists($path . '/' . $profile->image)) {
-                File::delete($path . '/' . $profile->image);
-            }
-
-            $file = $request->file('image');
-            $ext = $file->getClientOriginalExtension();
-            $filename = time() . '.' . $ext;
-            $file->move($path, $filename);
-            $profile->image = $filename;
         }
 
         $profile->save();
@@ -247,5 +233,32 @@ switch ($profile->user->type) {
         return response()->json([
             'message' => 'Profile deleted successfully.',
         ], 200);
+    }
+    public function upload(Request $request){
+        $validator = Validator::make($request->all(),[
+            'image' => 'required|image|mimes:jpeg,png,jpg,gif',
+        ]);
+        $validatorMessage = collect($validator->errors())->flatMap(function ($e, $field){
+            return [$field => $e[0]];
+        });
+        if($validator->fails()){
+            return response()->json([
+                'status' => '422',
+                'error'  => $validatorMessage
+            ],422);
+        }
+            // Handle image upload
+            $path = 'uploads/profile';
+            if ($request->hasFile('image')) {
+                $file = $request->file('image');
+                $ext = $file->getClientOriginalExtension();
+                $filename = time() . '.' . $ext;
+                $file->move($path, $filename);
+                $imagePath = $path . '/' . $filename;
+            }
+            return response()->json([
+                    "message" => "Upload Successful",
+                    "imagePath" => $imagePath
+                ],200);
     }
 }

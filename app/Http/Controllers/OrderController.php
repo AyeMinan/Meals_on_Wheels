@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Order;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class OrderController extends Controller
 {
@@ -39,13 +40,13 @@ class OrderController extends Controller
             'nutritional_information' => 'nullable',
             'dietary_restrictions' => 'nullable',
             'price' => 'required|numeric',
-            'is_frozen' => 'required|boolean',
-            'delivery_status' => 'required|boolean',
-            'is_preparing' => 'required|boolean',
-            'is_finished' => 'required|boolean',
-            'is_pickup' => 'required|boolean',
-            'is_delivered' => 'required|boolean',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif',
+            'is_frozen' => 'required',
+            'delivery_status' => 'required',
+            'is_preparing' => 'required',
+            'is_finished' => 'required',
+            'is_pickup' => 'required',
+            'is_delivered' => 'required',
+            'image' => 'required',
             'temperature' => 'required',
 
         ]);
@@ -103,18 +104,17 @@ public function update(Request $request, $id){
             'nutritional_information' => 'nullable',
             'dietary_restrictions' => 'nullable',
             'price' => 'required|numeric',
-            'is_frozen' => 'required|boolean',
-            'delivery_status' => 'required|boolean',
-            'is_preparing' => 'required|boolean',
-            'is_finished' => 'required|boolean',
-            'is_pickup' => 'required|boolean',
-            'is_delivered' => 'required|boolean',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif',
+            'is_frozen' => 'required',
+            'delivery_status' => 'required',
+            'is_preparing' => 'required',
+            'is_finished' => 'required',
+            'is_pickup' => 'required',
+            'is_delivered' => 'required',
+            'image' => 'required',
             'temperature' => 'required',
 
         ]);
 
-        // dd($validatedData);
         if($user && ($user->type === 'member' || $user->type === 'caregiver')){
         $validatedData['orderer_id'] = $user->id;
     }else{
@@ -122,16 +122,6 @@ public function update(Request $request, $id){
             'message' => 'Invalid User Type'
         ],500);
     }
-    $path = 'uploads/orders';
-    if ($request->hasFile('image')) {
-        $file = $request->file('image');
-        $ext = $file->getClientOriginalExtension();
-        $filename = time() . '.' . $ext;
-        $file->move($path, $filename);
-        $validatedData['image'] = $filename;
-    }
-
-
 
     $order->update($validatedData);
 
@@ -148,6 +138,33 @@ public function destory($id){
     $order->delete();
 
     return response()->json(["messsage" => "Order Deleted Successful"]);
+}
+public function upload(Request $request){
+    $validator = Validator::make($request->all(),[
+        'image' => 'required|image|mimes:jpeg,png,jpg,gif',
+    ]);
+    $validatorMessage = collect($validator->errors())->flatMap(function ($e, $field){
+        return [$field => $e[0]];
+    });
+    if($validator->fails()){
+        return response()->json([
+            'status' => '422',
+            'error'  => $validatorMessage
+        ],422);
+    }
+        // Handle image upload
+        $path = 'uploads/orders';
+        if ($request->hasFile('image')) {
+            $file = $request->file('image');
+            $ext = $file->getClientOriginalExtension();
+            $filename = time() . '.' . $ext;
+            $file->move($path, $filename);
+            $imagePath = $path . '/' . $filename;
+        }
+        return response()->json([
+                "message" => "Upload Successful",
+                "imagePath" => $imagePath
+            ],200);
 }
 }
 
