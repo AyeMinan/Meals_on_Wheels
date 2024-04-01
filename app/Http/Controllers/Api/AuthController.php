@@ -130,6 +130,17 @@ class AuthController extends Controller
 
                 $user->volunteer()->save($volunteer);
                 break;
+            case 'donor':
+                    $donor = new donor([
+                        'first_name' => $request->first_name,
+                        'last_name' => $request->last_name,
+                        'gender' => $request->gender,
+                        'date_of_birth' => $request->date_of_birth,
+                    ]);
+
+                    $user->donor()->save($donor);
+                    break;
+
 
             default:
                 break;
