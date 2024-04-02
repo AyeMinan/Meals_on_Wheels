@@ -120,13 +120,14 @@ public function update($request, $id){
     public function delete($id)
     {
         $partner = Partner::find($id);
+        $partnerUser = User::where('id', $partner->user_id)->first();
 
         if ($partner) {
 
             $partner->delete();
             $partner->user()->delete();
-            $partner->user()->profile()->delete();
-            return $partner;
+            $partnerUser->profile()->delete();
+
         }
         return null;
     }

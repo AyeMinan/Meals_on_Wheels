@@ -115,13 +115,10 @@ class VolunteerRepository implements VolunteerInterface
     }
     public function delete($id){
         $volunteer=Volunteer::findOrFail($id);
+        $volunteerUser = User::where('id', $volunteer->user_id)->first();
         $volunteer->delete();
         $volunteer->user()->delete();
-
-        if(!$volunteer->user()->profile()){
-            return;
-        }
-        $volunteer->user()->profile()->delete();
+        $volunteerUser->profile()->delete();
     }
 
 }

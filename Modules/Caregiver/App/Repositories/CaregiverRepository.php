@@ -132,12 +132,13 @@ class CaregiverRepository implements CaregiverRepositoryInterface
     public function deleteCaregiver($id)
     {
         $caregiver = Caregiver::where('id', $id)->first();
+        $caregiverUser = User::where('id', $caregiver->user_id)->first();
 
         if(!$caregiver){
             return null;
         }
         $caregiver->delete();
         $caregiver->user()->delete();
-        $caregiver->user()->profile()->delete();
+        $caregiverUser->profile()->delete();
     }
 }

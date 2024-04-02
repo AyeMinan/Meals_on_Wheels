@@ -16,7 +16,7 @@ class StripeController extends Controller
             $stripe = new \Stripe\StripeClient(env('STRIPE_SK'));
 
             Stripe::setApiKey(env('STRIPE_SK'));
-
+       
             // Create a charge using the token
             $response = $stripe->charges->create([
                 'amount' => $request->amount,

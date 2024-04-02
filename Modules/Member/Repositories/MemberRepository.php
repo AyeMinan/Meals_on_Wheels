@@ -133,14 +133,15 @@ class MemberRepository implements MemberRepositoryInterface
 
     public function deleteMember($id){
         $member = Member::where('id', $id)->first();
-
+        $memberUser = User::where('id', $member->user_id)->first();
         if(!$member){
             return null;
         }
 
         $member->delete();
         $member->user()->delete();
-        $member->user()->profile()->delete();
+        $memberUser->profile()->delete();
+
 
     }
 }

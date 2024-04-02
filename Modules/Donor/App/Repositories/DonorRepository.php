@@ -79,16 +79,13 @@ class DonorRepository implements DonorRepositoryInterface{
     }
     public function deleteDonor($id)
     {   $donor = Donor::find($id);
-
+        $donorUser = User::where('id', $donor->user_id)->first();
         try{
             $donor->delete();
-            if($donor->user()){
             $donor->user()->delete();
-            }
-            if($donor->user()->profile()){
-            $donor->user()->profile()->delete();
-            }
-        } catch (\Exception $e) {
+            $donorUser->profile()->delete();
+
+        } catch (Exception $e) {
             // Handle exceptions if needed
             return false; // Deletion failed
         }
