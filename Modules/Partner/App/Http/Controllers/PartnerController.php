@@ -15,11 +15,12 @@ class PartnerController extends Controller
     }
     public function index()
     {
-        $partners = $this->partnerService->allPartner();
+        [$partner, $partnerProfile] = $this->partnerService->allPartner();
         return response()->json([
             'CSRF Token'=>csrf_token(),
-            "partner" => $partners
-        ],200);;
+            "partner" => $partner,
+            "Profile" => $partnerProfile
+        ],200);
     }
 
 

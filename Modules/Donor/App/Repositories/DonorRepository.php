@@ -14,9 +14,15 @@ class DonorRepository implements DonorRepositoryInterface{
 
     public function allDonor()
     {
-        $donors = Donor::with('user.profile')->get();
-
-        return $donors;
+        $donor = Donor::with('user')->get();
+            $donorUsers = User::where('type', 'donor')->get();
+            foreach($donorUsers as $donorUser){
+                $profile = Profile::where('user_id', $donorUser->id)->get();
+                if ($profile) {
+                    $donorProfile[] = $profile;
+                }
+            }
+      return [$donor, $donorProfile];
     }
 
     public function storeDonor($request, $validatedData){

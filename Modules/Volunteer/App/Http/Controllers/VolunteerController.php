@@ -18,10 +18,11 @@ class VolunteerController extends Controller
    }
     public function index()
     {
-        $volunteers = $this->volunteerService->allVolunteer();
+        [$volunteer, $volunteerProfile] = $this->volunteerService->allVolunteer();
         return response()->json([
             "CSRF Token" => csrf_token(),
-            "volunteer" => $volunteers,
+            "volunteer" => $volunteer,
+            "Profile" => $volunteerProfile
         ],200);
 
     }

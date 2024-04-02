@@ -19,9 +19,16 @@ class CaregiverRepository implements CaregiverRepositoryInterface
 
     public function getAllCaregivers(){
 
-            $caregivers = caregiver::with('user.profile')->get();
+        $caregiver = caregiver::with('user')->get();
+        $caregiverUsers = User::where('type', 'caregiver')->get();
+        foreach($caregiverUsers as $caregiverUser){
+            $profile = Profile::where('user_id', $caregiverUser->id)->get();
+            if ($profile) {
+                $caregiverProfile[] = $profile;
+            }
 
-      return $caregivers;
+    }
+  return [$caregiver, $caregiverProfile];
     }
     public function storeCaregiver(Request $request, $validatedData){
 

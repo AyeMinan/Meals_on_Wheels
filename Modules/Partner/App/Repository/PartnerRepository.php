@@ -14,9 +14,15 @@ class PartnerRepository implements PartnerInterface
 
     public function all()
     {
-        $partners = Partner::with('user.profile')->get();
-
-        return $partners;
+        $partner = Partner::with('user')->get();
+            $partnerUsers = User::where('type', 'partner')->get();
+            foreach($partnerUsers as $partnerUser){
+                $profile = Profile::where('user_id', $partnerUser->id)->get();
+                if ($profile) {
+                    $partnerProfile[] = $profile;
+                }
+            }
+      return [$partner, $partnerProfile];
     }
 
     public function getById($id)

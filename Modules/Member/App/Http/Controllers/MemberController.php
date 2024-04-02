@@ -20,10 +20,11 @@ class MemberController extends Controller
     }
     public function index()
     {
-        $members = $this->memberService->getAllMembers();
+        [$member, $memberProfile] = $this->memberService->getAllMembers();
         return response()->json([
             "CSRF Token" => csrf_token(),
-            "members" => $members
+            "member" => $member,
+            "Profile" => $memberProfile
         ],200);
     }
 
