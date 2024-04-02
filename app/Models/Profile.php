@@ -11,17 +11,14 @@ class Profile extends Model
     use HasFactory;
     protected $fillable=['user_name','image','phone_number','address','user_id'];
 
+    protected $hidden = [  'created_at',
+    'updated_at'];
+
     public function user()
     {
         return $this->belongsTo(User::class);
     }
 
-    public function member(){
-        return $this->hasOne(Member::class);
-    }
-
-    public function caregiver(){
-        return $this->hasOne(Caregiver::class);
-    }
+   
 
 }

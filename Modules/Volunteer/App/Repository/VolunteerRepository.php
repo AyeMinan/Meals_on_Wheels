@@ -12,15 +12,9 @@ class VolunteerRepository implements VolunteerInterface
 {
 
     public function all(){
-        $volunteer = Volunteer::with('user')->get();
-        $volunteerUsers = User::where('type', 'volunteer')->get();
-        foreach($volunteerUsers as $volunteerUser){
-            $profile = Profile::where('user_id', $volunteerUser->id)->get();
-            if ($profile) {
-                $volunteerProfile[] = $profile;
-            }
-        }
-  return [$volunteer, $volunteerProfile];
+        $volunteers = Volunteer::with('user.profile')->get();
+
+        return $volunteers;
 
     }
     public function getById($id){
@@ -29,6 +23,7 @@ class VolunteerRepository implements VolunteerInterface
 
     }
     public function create($validatedData){
+
         try{
             DB::beginTransaction();
             $user = User::create([
@@ -73,29 +68,22 @@ class VolunteerRepository implements VolunteerInterface
             throw new \Exception ($e->getMessage());
         }
     }
-    public function update($id,$request){
+    public function update($request, $id){
         $volunteer = Volunteer::where('id', $id)->first();
-        $volunteerUser = User::where('id', $volunteer->user_id)->first();
-        $volunteerProfile = Profile::where('user_id', $volunteerUser->id)->first();
-
-        if(!$volunteer && !$volunteerUser && !$volunteerProfile){
+        if(!$volunteer){
             return null;
         }
 
-        $volunteer->first_name = $request['first_name'];
-        $volunteer->last_name = $request['last_name'];
-        $volunteer->gender = $request['gender'];
-        $volunteer->date_of_birth = $request['date_of_birth'];
 
-
-        $volunteer->save();
-
-        $volunteerProfile->user_name = $request['user_name'];
-        $volunteerProfile->image = $request['image'];
-        $volunteerProfile->address = $request['address'];
-        $volunteerProfile->phone_number = $request['phone_number'];
-
-        $ $volunteerProfile->save();
+        $volunteerUser = User::where('id', $volunteer->user_id)->first();
+        if ($request->hasAny(['first_name', 'last_name', 'gender', 'date_of_birth'])) {
+            $volunteer->first_name = $request->input('first_name');
+            $volunteer->last_name = $request->input('last_name');
+            $volunteer->gender = $request->input('gender');
+            $volunteer->date_of_birth = $request->input('date_of_birth');
+            $volunteer->save();
+        }
+        if($request->hasAny('email', 'password', 'confirm_password')) {
 
         $volunteerUser->user_name = $request['user_name'];
         $volunteerUser->email = $request['email'];
@@ -103,13 +91,31 @@ class VolunteerRepository implements VolunteerInterface
         $volunteerUser->confirm_password = $request['confirm_password'];
 
         $volunteerUser->save();
+        }
 
+        if($request->hasAny('image', 'address','phone_number')) {
+
+            $volunteerProfile = Profile::where('user_id', $volunteerUser->id)->first();
+            $volunteerProfile->user_name = $request['user_name'];
+        $volunteerProfile->image = $request['image'];
+        $volunteerProfile->address = $request['address'];
+        $volunteerProfile->phone_number = $request['phone_number'];
+
+
+        $volunteerProfile->save();
+
+        }
 
     }
     public function delete($id){
         $volunteer=Volunteer::findOrFail($id);
         $volunteer->delete();
-        return $volunteer;
+        $volunteer->user()->delete();
+
+        if(!$volunteer->user()->profile()){
+            return;
+        }
+        $volunteer->user()->profile()->delete();
     }
 
 }

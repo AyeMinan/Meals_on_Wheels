@@ -17,15 +17,9 @@ class MemberRepository implements MemberRepositoryInterface
 
     public function getAllMembers(){
 
-            $member = Member::with('user')->get();
-            $memberUsers = User::where('type', 'member')->get();
-            foreach($memberUsers as $memberUser){
-                $profile = Profile::where('user_id', $memberUser->id)->get();
-                if ($profile) {
-                    $memberProfile[] = $profile;
-                }
-            }
-      return [$member, $memberProfile];
+            $members = Member::with('user.profile')->get();
+
+      return $members;
     }
     public function storeMember(Request $request, $validatedData){
         // dd($validatedData);
@@ -91,43 +85,23 @@ class MemberRepository implements MemberRepositoryInterface
     public function updateMember($request, $id){
 
         $member = Member::where('id', $id)->first();
-        $memberUser = User::where('id', $member->user_id)->first();
-        $memberProfile = Profile::where('user_id', $memberUser->id)->first();
-
-        if(!$member && !$memberUser && !$memberProfile){
+        if(!$member){
             return null;
         }
+        $memberUser = User::where('id', $member->user_id)->first();
 
-        $member->first_name = $request['first_name'];
-        $member->last_name = $request['last_name'];
-        $member->gender = $request['gender'];
-        $member->date_of_birth = $request['date_of_birth'];
-        $member->age = $request['age'];
-        $member->emergency_contact_number = $request['emergency_contact_number'];
-        $member->dietary_restriction = $request['dietary_restriction'];
-
-        $member->save();
-
-        $memberProfile->user_name = $request['user_name'];
-        $memberProfile->image = $request['image'];
-        $memberProfile->address = $request['address'];
-        $memberProfile->phone_number = $request['phone_number'];
-
-        $path = 'uploads/profile';
-        if ($request->hasFile('image')) {
-            // Delete old image
-            if ($memberProfile->image && File::exists($path . '/' . $memberProfile->image)) {
-                File::delete($path . '/' . $memberProfile->image);
-            }
-
-            $file = $request->file('image');
-            $ext = $file->getClientOriginalExtension();
-            $filename = time() . '.' . $ext;
-            $file->move($path, $filename);
-            $memberProfile->image = $filename;
+        if ($request->hasAny(['first_name', 'last_name', 'gender', 'date_of_birth', 'age', 'emergency_contact_number', 'dietary_restriction'])) {
+            $member->first_name = $request->input('first_name');
+            $member->last_name = $request->input('last_name');
+            $member->gender = $request->input('gender');
+            $member->date_of_birth = $request->input('date_of_birth');
+            $member->age = $request->input('age');
+            $member->emergency_contact_number = $request->input('emergency_contact_number');
+            $member->dietary_restriction = $request->input('dietary_restriction');
+            $member->save();
         }
+        if($request->hasAny('email', 'password', 'confirm_password')) {
 
-        $memberProfile->save();
 
         $memberUser->user_name = $request['user_name'];
         $memberUser->email = $request['email'];
@@ -135,7 +109,20 @@ class MemberRepository implements MemberRepositoryInterface
         $memberUser->confirm_password = $request['confirm_password'];
 
         $memberUser->save();
+        }
 
+        if($request->hasAny('image', 'address','phone_number')) {
+
+        $memberProfile = Profile::where('user_id', $memberUser->id)->first();
+        $memberProfile->user_name = $request['user_name'];
+        $memberProfile->image = $request['image'];
+        $memberProfile->address = $request['address'];
+        $memberProfile->phone_number = $request['phone_number'];
+
+
+        $memberProfile->save();
+
+        }
     }
 
     public function deleteMember($id){
@@ -146,8 +133,8 @@ class MemberRepository implements MemberRepositoryInterface
         }
 
         $member->delete();
-        $member->profile()->delete();
         $member->user()->delete();
+        $member->user()->profile()->delete();
 
     }
 }

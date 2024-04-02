@@ -15,11 +15,10 @@ class PartnerController extends Controller
     }
     public function index()
     {
-        [$partner, $partnerProfile] = $this->partnerService->allPartner();
+        $partners = $this->partnerService->allPartner();
         return response()->json([
-            'token'=>csrf_token(),
-            "partner" => $partner,
-            "Profile" => $partnerProfile
+            'CSRF Token'=>csrf_token(),
+            "partner" => $partners
         ],200);;
     }
 
@@ -28,10 +27,10 @@ class PartnerController extends Controller
     public function store(PartnerRequest $request)
     {
         $validatedData=$request->validated();
-        $partner=$this->partnerService->storePartner($validatedData);
+      $this->partnerService->storePartner($validatedData);
         return response()->json([
-            'success'=>true,
-            'partner'=>$partner,
+            'message'=> "Partner created successful",
+
         ]);
     }
 

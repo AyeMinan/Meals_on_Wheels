@@ -18,17 +18,10 @@ class CaregiverRepository implements CaregiverRepositoryInterface
 {
 
     public function getAllCaregivers(){
-        
-            $caregiver = caregiver::with('user')->get();
-            $caregiverUsers = User::where('type', 'caregiver')->get();
-            foreach($caregiverUsers as $caregiverUser){
-                $profile = Profile::where('user_id', $caregiverUser->id)->get();
-                if ($profile) {
-                    $caregiverProfile[] = $profile;
-                }
 
-        }
-      return [$caregiver, $caregiverProfile];
+            $caregivers = caregiver::with('user.profile')->get();
+
+      return $caregivers;
     }
     public function storeCaregiver(Request $request, $validatedData){
 
@@ -92,70 +85,41 @@ class CaregiverRepository implements CaregiverRepositoryInterface
 
     public function updateCaregiver(Request $request, $id){
         $caregiver = Caregiver::where('id', $id)->first();
-        $caregiverUser = User::where('id', $caregiver->user_id)->first();
-        $caregiverProfile = Profile::where('user_id', $caregiverUser->id)->first();
-
-
-        if(!$caregiver && !$caregiverUser && !$caregiverProfile){
+        if(!$caregiver){
             return null;
         }
-        $caregiverData = $request->validate([
-            'first_name' => ['required_if:type,caregiver|string'],
-            'last_name' => ['required_if:type,caregiver|string'],
-            'gender' => ['required_if:type,caregiver|string'],
-            'date_of_birth' => ['required_if:type,caregiver|date', 'date'],
-            'relationship_with_member' => 'required_if:type,caregiver|string',
-        ]);
+        $caregiverUser = User::where('id', $caregiver->user_id)->first();
+        if ($request->hasAny(['first_name', 'last_name', 'gender', 'date_of_birth', 'relationship_with_member'])) {
+            $caregiver->first_name = $request->input('first_name');
+            $caregiver->last_name = $request->input('last_name');
+            $caregiver->gender = $request->input('gender');
+            $caregiver->date_of_birth = $request->input('date_of_birth');
+            $caregiver->relationship_with_member = $request->input('relationship_with_member');
+            $caregiver->save();
+        }
+        if($request->hasAny( 'email', 'password', 'confirm_password')) {
 
-        dd($caregiverData);
-        // $caregiver->first_name = $request['first_name'];
-        // $caregiver->last_name = $request['last_name'];
-        // $caregiver->gender = $request['gender'];
-        // $caregiver->date_of_birth = $request['date_of_birth'];
-        // $caregiver->relationship_with_member = $request['relationship_with_member'];
 
-        $caregiver->update($caregiverData);
+        $caregiverUser->user_name = $request['user_name'];
+        $caregiverUser->email = $request['email'];
+        $caregiverUser->password = $request['password'];
+        $caregiverUser->confirm_password = $request['confirm_password'];
 
-        $caregiverProfileData = $request->validate([
-            'user_name' => 'required',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'address' => ['required'],
-            'phone_number' => ['required'],
-        ]);
-
-        // $caregiverProfile->user_name = $request['user_name'];
-        // $caregiverProfile->image = $request['image'];
-        // $caregiverProfile->address = $request['address'];
-        // $caregiverProfile->phone_number = $request['phone_number'];
-
-        $path = 'uploads/profile';
-        if ($request->hasFile('image')) {
-            // Delete old image
-            if ($caregiverProfile->image && File::exists($path . '/' . $caregiverProfile->image)) {
-                File::delete($path . '/' . $caregiverProfile->image);
-            }
-
-            $file = $request->file('image');
-            $ext = $file->getClientOriginalExtension();
-            $filename = time() . '.' . $ext;
-            $file->move($path, $filename);
-            $caregiverProfile->image = $filename;
+        $caregiverUser->save();
         }
 
-        $caregiverProfile->update($caregiverProfileData);
+        if($request->hasAny( 'image', 'address','phone_number')) {
 
-        $caregiverUserData = $request->validate([
-            'user_name' => 'required',
-            'email' => ['required', 'email'],
-            'password' => ['required', 'min:8'],
-            'confirm_password' => ['required', 'min:8'],
-        ]);
-        // $caregiverUser->user_name = $request['user_name'];
-        // $caregiverUser->email = $request['email'];
-        // $caregiverUser->password = $request['password'];
-        // $caregiverUser->confirm_password = $request['confirm_password'];
+        $caregiverProfile = Profile::where('user_id', $caregiverUser->id)->first();
+        $caregiverProfile->user_name = $request['user_name'];
+        $caregiverProfile->image = $request['image'];
+        $caregiverProfile->address = $request['address'];
+        $caregiverProfile->phone_number = $request['phone_number'];
 
-        $caregiverUser->update($caregiverUserData);
+
+        $caregiverProfile->save();
+
+        }
     }
 
     public function deleteCaregiver($id)
@@ -166,7 +130,7 @@ class CaregiverRepository implements CaregiverRepositoryInterface
             return null;
         }
         $caregiver->delete();
-        $caregiver->profile()->delete();
         $caregiver->user()->delete();
+        $caregiver->user()->profile()->delete();
     }
 }

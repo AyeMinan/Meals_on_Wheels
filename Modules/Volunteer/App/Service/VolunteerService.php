@@ -29,9 +29,9 @@ class VolunteerService{
 
     }
 
-    public function updateVolunteer($id,$attributes)
+    public function updateVolunteer($request,$id)
     {
-        return $this->volunteerRepository->update($id,$attributes);
+        return $this->volunteerRepository->update($request,$id);
 
     }
 

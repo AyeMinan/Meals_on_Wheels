@@ -15,5 +15,5 @@ use Modules\Volunteer\App\Http\Controllers\VolunteerController;
 */
 
 Route::group([], function () {
-    Route::resource('volunteer', VolunteerController::class)->names('volunteer')->middleware(['admin','auth:sanctum']);
+    Route::resource('volunteer', VolunteerController::class)->names('volunteer');
 });

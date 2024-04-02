@@ -20,11 +20,10 @@ class MemberController extends Controller
     }
     public function index()
     {
-        [$member, $memberProfile] = $this->memberService->getAllMembers();
+        $members = $this->memberService->getAllMembers();
         return response()->json([
             "CSRF Token" => csrf_token(),
-            "member" => $member,
-            "Profile" => $memberProfile
+            "members" => $members
         ],200);
     }
 
@@ -113,13 +112,7 @@ class MemberController extends Controller
         $startTime = microtime(true);
 
         try{
-        $member = $this->memberService->deleteMember($id);
-
-        if($member == null){
-            return response()->json([
-                'message' => "Member not fount",
-            ],404);
-        }
+         $this->memberService->deleteMember($id);
         return response()->json([
             'message' => "Member has been successfully deleted"
         ],200);

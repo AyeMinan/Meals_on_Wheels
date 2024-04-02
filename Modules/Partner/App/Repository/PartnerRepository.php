@@ -14,15 +14,9 @@ class PartnerRepository implements PartnerInterface
 
     public function all()
     {
-        $partner = Partner::with('user')->get();
-            $partnerUsers = User::where('type', 'partner')->get();
-            foreach($partnerUsers as $partnerUser){
-                $profile = Profile::where('user_id', $partnerUser->id)->get();
-                if ($profile) {
-                    $partnerProfile[] = $profile;
-                }
-            }
-      return [$partner, $partnerProfile];
+        $partners = Partner::with('user.profile')->get();
+
+        return $partners;
     }
 
     public function getById($id)
@@ -80,34 +74,41 @@ class PartnerRepository implements PartnerInterface
 public function update($request, $id){
 
     $partner = Partner::where('id', $id)->first();
-    $partnerUser = User::where('id', $partner->user_id)->first();
-    $partnerProfile = Profile::where('user_id', $partnerUser->id)->first();
+        if(!$partner){
+            return null;
+        }
 
-    if(!$partner && !$partnerUser && !$partnerProfile){
-        return null;
-    }
+        $partnerUser = User::where('id', $partner->user_id)->first();
+        if ($request->hasAny(['first_name', 'last_name', 'shop_name', 'shop_address'])) {
+            $partner->first_name = $request->input('first_name');
+            $partner->last_name = $request->input('last_name');
+            $partner->shop_name = $request->input('shop_name');
+            $partner->shop_address = $request->input('shop_address');
+            $partner->save();
+        }
+        if($request->hasAny( 'email', 'password', 'confirm_password')) {
 
-    $partner->first_name = $request['first_name'];
-    $partner->last_name = $request['last_name'];
-    $partner->gender = $request['shop_name'];
-    $partner->date_of_birth = $request['shop_address'];
 
-    $partner->save();
+        $partnerUser->user_name = $request['user_name'];
+        $partnerUser->email = $request['email'];
+        $partnerUser->password = $request['password'];
+        $partnerUser->confirm_password = $request['confirm_password'];
 
-    $partnerProfile->user_name = $request['user_name'];
-    $partnerProfile->image = $request['image'];
-    $partnerProfile->address = $request['address'];
-    $partnerProfile->phone_number = $request['phone_number'];
+        $partnerUser->save();
+        }
 
-    $partnerProfile->save();
+        if($request->hasAny( 'image', 'address','phone_number')) {
 
-    $partnerUser->user_name = $request['user_name'];
-    $partnerUser->email = $request['email'];
-    $partnerUser->password = $request['password'];
-    $partnerUser->confirm_password = $request['confirm_password'];
+        $partnerProfile = Profile::where('user_id', $partnerUser->id)->first();
+        $partnerProfile->user_name = $request['user_name'];
+        $partnerProfile->image = $request['image'];
+        $partnerProfile->address = $request['address'];
+        $partnerProfile->phone_number = $request['phone_number'];
 
-    $partnerUser->save();
 
+        $partnerProfile->save();
+
+        }
     }
 
     public function delete($id)
@@ -117,6 +118,8 @@ public function update($request, $id){
         if ($partner) {
 
             $partner->delete();
+            $partner->user()->delete();
+            $partner->user()->profile()->delete();
             return $partner;
         }
         return null;

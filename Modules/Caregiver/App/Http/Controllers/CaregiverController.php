@@ -21,10 +21,10 @@ class CaregiverController extends Controller
     }
     public function index()
     {
-        [$caregiver, $caregiverProfile] = $this->caregiverService->getAllCaregivers();
+        $caregivers = $this->caregiverService->getAllCaregivers();
         return response()->json([
-            "caregiver" => $caregiver,
-            "Profile" => $caregiverProfile
+            "CSRF Token" => csrf_token(),
+            "caregivers" => $caregivers
         ],200);
     }
 
