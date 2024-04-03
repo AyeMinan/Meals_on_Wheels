@@ -96,37 +96,33 @@ class CaregiverRepository implements CaregiverRepositoryInterface
             return null;
         }
         $caregiverUser = User::where('id', $caregiver->user_id)->first();
-        if ($request->hasAny(['first_name', 'last_name', 'gender', 'date_of_birth', 'relationship_with_member'])) {
-            $caregiver->first_name = $request->input('first_name');
-            $caregiver->last_name = $request->input('last_name');
-            $caregiver->gender = $request->input('gender');
-            $caregiver->date_of_birth = $request->input('date_of_birth');
-            $caregiver->relationship_with_member = $request->input('relationship_with_member');
-            $caregiver->save();
-        }
-        if($request->hasAny( 'email', 'password', 'confirm_password')) {
+        
+            $caregiver->first_name = $request->input('first_name', $caregiver->first_name);
+            $caregiver->last_name = $request->input('last_name', $caregiver->last_name);
+            $caregiver->gender = $request->input('gender', $caregiver->gender);
+            $caregiver->date_of_birth = $request->input('date_of_birth',  $caregiver->date_of_birth);
+            $caregiver->relationship_with_member = $request->input('relationship_with_member',  $caregiver->relationship_with_member);
 
+        $caregiver->save();
 
-        $caregiverUser->user_name = $request['user_name'];
-        $caregiverUser->email = $request['email'];
-        $caregiverUser->password = $request['password'];
-        $caregiverUser->confirm_password = $request['confirm_password'];
+            $caregiverUser->user_name = $request->input('user_name', $caregiverUser->user_name );
+            $caregiverUser->email = $request->input('email', $caregiverUser->email);
+            $caregiverUser->password = $request->input('password', $caregiverUser->password);
+            $caregiverUser->confirm_password = $request->input('confirm_password', $caregiverUser->confirm_password);
 
         $caregiverUser->save();
-        }
 
-        if($request->hasAny( 'image', 'address','phone_number')) {
+            $caregiverProfile = Profile::where('user_id', $caregiverUser->id)->first();
 
-        $caregiverProfile = Profile::where('user_id', $caregiverUser->id)->first();
-        $caregiverProfile->user_name = $request['user_name'];
-        $caregiverProfile->image = $request['image'];
-        $caregiverProfile->address = $request['address'];
-        $caregiverProfile->phone_number = $request['phone_number'];
+            $caregiverProfile->user_name = $request->input('user_name', $caregiverProfile->user_name );
+            $caregiverProfile->image = $request->input('image', $caregiverProfile->image );
+            $caregiverProfile->address =  $request->input('address', $caregiverProfile->address );
+            $caregiverProfile->phone_number =  $request->input('phone_number', $caregiverProfile->phone_number );
 
 
         $caregiverProfile->save();
 
-        }
+
     }
 
     public function deleteCaregiver($id)

@@ -96,39 +96,39 @@ class MemberRepository implements MemberRepositoryInterface
         }
         $memberUser = User::where('id', $member->user_id)->first();
 
-        if ($request->hasAny(['first_name', 'last_name', 'gender', 'date_of_birth', 'age', 'emergency_contact_number', 'dietary_restriction'])) {
-            $member->first_name = $request->input('first_name');
-            $member->last_name = $request->input('last_name');
-            $member->gender = $request->input('gender');
-            $member->date_of_birth = $request->input('date_of_birth');
-            $member->age = $request->input('age');
-            $member->emergency_contact_number = $request->input('emergency_contact_number');
-            $member->dietary_restriction = $request->input('dietary_restriction');
+
+            $member->first_name = $request->input('first_name', $member->first_name);
+            $member->last_name = $request->input('last_name', $member->last_name);
+            $member->gender = $request->input('gender', $member->gender);
+            $member->date_of_birth = $request->input('date_of_birth', $member->date_of_birth );
+            $member->age = $request->input('age', $member->age);
+            $member->emergency_contact_number = $request->input('emergency_contact_number', $member->emergency_contact_number);
+            $member->dietary_restriction = $request->input('dietary_restriction',  $member->dietary_restriction);
             $member->save();
-        }
-        if($request->hasAny('email', 'password', 'confirm_password')) {
 
 
-        $memberUser->user_name = $request['user_name'];
-        $memberUser->email = $request['email'];
-        $memberUser->password = $request['password'];
-        $memberUser->confirm_password = $request['confirm_password'];
+
+
+        $memberUser->user_name = $request->input('user_name', $memberUser->user_name );
+        $memberUser->email = $request->input('email', $memberUser->email);
+        $memberUser->password = $request->input('password', $memberUser->password);
+        $memberUser->confirm_password = $request->input('confirm_password', $memberUser->confirm_password);
 
         $memberUser->save();
-        }
 
-        if($request->hasAny('image', 'address','phone_number')) {
+
+
 
         $memberProfile = Profile::where('user_id', $memberUser->id)->first();
-        $memberProfile->user_name = $request['user_name'];
-        $memberProfile->image = $request['image'];
-        $memberProfile->address = $request['address'];
-        $memberProfile->phone_number = $request['phone_number'];
+        $memberProfile->user_name = $request->input('user_name', $memberProfile->user_name );
+        $memberProfile->image = $request->input('image', $memberProfile->image );
+        $memberProfile->address =  $request->input('address', $memberProfile->address );
+        $memberProfile->phone_number =  $request->input('phone_number', $memberProfile->phone_number );
 
 
         $memberProfile->save();
 
-        }
+        
     }
 
     public function deleteMember($id){

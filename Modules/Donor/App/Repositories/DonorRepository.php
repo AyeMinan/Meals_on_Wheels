@@ -99,37 +99,33 @@ class DonorRepository implements DonorRepositoryInterface{
             return null;
         }
 
-
         $donorUser = User::where('id', $donor->user_id)->first();
-        if ($request->hasAny(['first_name', 'last_name', 'gender', 'date_of_birth'])) {
-            $donor->first_name = $request->input('first_name');
-            $donor->last_name = $request->input('last_name');
-            $donor->gender = $request->input('gender');
-            $donor->date_of_birth = $request->input('date_of_birth');
-            $donor->save();
-        }
-        if($request->hasAny('email', 'password', 'confirm_password')) {
 
-        $donorUser->user_name = $request['user_name'];
-        $donorUser->email = $request['email'];
-        $donorUser->password = $request['password'];
-        $donorUser->confirm_password = $request['confirm_password'];
+            $donor->first_name = $request->input('first_name', $donor->first_name);
+            $donor->last_name = $request->input('last_name', $donor->last_name);
+            $donor->gender = $request->input('gender', $donor->gender);
+            $donor->date_of_birth = $request->input('date_of_birth',  $donor->date_of_birth);
+
+        $donor->save();
+
+            $donorUser->user_name = $request->input('user_name', $donorUser->user_name );
+            $donorUser->email = $request->input('email', $donorUser->email);
+            $donorUser->password = $request->input('password', $donorUser->password);
+            $donorUser->confirm_password = $request->input('confirm_password', $donorUser->confirm_password);
 
         $donorUser->save();
-        }
-
-        if($request->hasAny('image', 'address','phone_number')) {
 
             $donorProfile = Profile::where('user_id', $donorUser->id)->first();
-            $donorProfile->user_name = $request['user_name'];
-        $donorProfile->image = $request['image'];
-        $donorProfile->address = $request['address'];
-        $donorProfile->phone_number = $request['phone_number'];
+
+            $donorProfile->user_name = $request->input('user_name', $donorProfile->user_name );
+            $donorProfile->image = $request->input('image', $donorProfile->image );
+            $donorProfile->address =  $request->input('address', $donorProfile->address );
+            $donorProfile->phone_number =  $request->input('phone_number', $donorProfile->phone_number );
 
 
         $donorProfile->save();
 
-        }
+
             } catch(Exception $e) {
                 return response()->json(['message' => $e->getMessage()], 500);
         }

@@ -80,37 +80,31 @@ class VolunteerRepository implements VolunteerInterface
             return null;
         }
 
-
         $volunteerUser = User::where('id', $volunteer->user_id)->first();
-        if ($request->hasAny(['first_name', 'last_name', 'gender', 'date_of_birth'])) {
-            $volunteer->first_name = $request->input('first_name');
-            $volunteer->last_name = $request->input('last_name');
-            $volunteer->gender = $request->input('gender');
-            $volunteer->date_of_birth = $request->input('date_of_birth');
-            $volunteer->save();
-        }
-        if($request->hasAny('email', 'password', 'confirm_password')) {
 
-        $volunteerUser->user_name = $request['user_name'];
-        $volunteerUser->email = $request['email'];
-        $volunteerUser->password = $request['password'];
-        $volunteerUser->confirm_password = $request['confirm_password'];
+          $volunteer->first_name = $request->input('first_name', $volunteer->first_name);
+            $volunteer->last_name = $request->input('last_name', $volunteer->last_name);
+            $volunteer->gender = $request->input('gender', $volunteer->gender);
+            $volunteer->date_of_birth = $request->input('date_of_birth',  $volunteer->date_of_birth);
+
+        $volunteer->save();
+
+            $volunteerUser->user_name = $request->input('user_name', $volunteerUser->user_name );
+            $volunteerUser->email = $request->input('email', $volunteerUser->email);
+            $volunteerUser->password = $request->input('password', $volunteerUser->password);
+            $volunteerUser->confirm_password = $request->input('confirm_password', $volunteerUser->confirm_password);
 
         $volunteerUser->save();
-        }
-
-        if($request->hasAny('image', 'address','phone_number')) {
 
             $volunteerProfile = Profile::where('user_id', $volunteerUser->id)->first();
-            $volunteerProfile->user_name = $request['user_name'];
-        $volunteerProfile->image = $request['image'];
-        $volunteerProfile->address = $request['address'];
-        $volunteerProfile->phone_number = $request['phone_number'];
+
+            $volunteerProfile->user_name = $request->input('user_name', $volunteerProfile->user_name );
+            $volunteerProfile->image = $request->input('image', $volunteerProfile->image );
+            $volunteerProfile->address =  $request->input('address', $volunteerProfile->address );
+            $volunteerProfile->phone_number =  $request->input('phone_number', $volunteerProfile->phone_number );
 
 
         $volunteerProfile->save();
-
-        }
 
     }
     public function delete($id){

@@ -119,46 +119,17 @@ class ProfileController extends Controller
             ], 403);
         }
 
-       // Validate request
-    $validator = Validator::make($request->all(), [
-            'user_name' => 'required',
-            'email' => ['required', 'email'],
-            'password' => ['required', 'min:8'],
-            'confirm_password' => ['required', 'min:8'],
-            'type' => 'required|string|in:member,caregiver,partner,volunteer,donor',
-            'age' => 'required_if:type,member|integer',
-            'phone_number' => 'required|string',
-            'date_of_birth' => 'required_if:type,member,volunteer|date',
-            'address' => 'required|string',
-            'first_name' => 'required|string',
-            'last_name' => 'required|string',
-            'gender' => 'required_if:type,member,volunteer|in:male,female,other',
-            'emergency_contact_number' => 'required_if:type,member|string',
-            'dietary_restriction' => 'required_if:type,member|string',
-            'relationship_with_member' => 'required_if:type,caregiver|string',
-            'shop_name' => 'required_if:type,partner|string',
-            'shop_address' => 'required_if:type,partner|string',
-            'image' => 'required',
-    ]);
 
-    $validatorMessage = collect($validator->errors())->flatMap(function ($e, $field){
-        return [$field => $e[0]];
-    });
-    if($validator->fails()){
-        return response()->json([
-            'status' => '422',
-            'error'  => $validatorMessage
-        ],422);
-    }
-       // Update profile data
 $profile->update([
     'user_name' => $request->input('user_name', $profile->user_name),
     'phone_number' => $request->input('phone_number', $profile->phone_number),
     'address' => $request->input('address', $profile->address),
+    'image' => $request->input('image', $profile->image )
 
 ]);
 
-// Update user data
+
+
 $profile->user->update([
     'user_name' => $request->input('user.user_name', $profile->user->user_name),
     'email' => $request->input('user.email', $profile->user->email),
@@ -181,6 +152,7 @@ switch ($profile->user->type) {
                 'dietary_restriction' => $request->input('dietary_restriction', $profile->user->member->dietary_restriction),
                 'user_id' => $userId
             ]);
+
         }
         break;
 
@@ -196,6 +168,7 @@ switch ($profile->user->type) {
                         'user_id' => $userId
 
                     ]);
+
                 }
                 break;
 
@@ -221,6 +194,7 @@ switch ($profile->user->type) {
                 'date_of_birth' => $request->input('date_of_birth', $profile->user->volunteer->date_of_birth),
                 'user_id' => $userId
                     ]);
+
                 }
                 break;
 
@@ -234,6 +208,7 @@ switch ($profile->user->type) {
                 'user_id' => $userId
 
                     ]);
+                
                 }
                 break;
         }
