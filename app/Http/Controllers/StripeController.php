@@ -8,15 +8,12 @@ use Stripe\Stripe;
 
 class StripeController extends Controller
 {
-    public function checkout(){
-        return "Card Info Request Page";
-    }
     public function payment(Request $request){
         try {
             $stripe = new \Stripe\StripeClient(env('STRIPE_SK'));
 
             Stripe::setApiKey(env('STRIPE_SK'));
-       
+
             // Create a charge using the token
             $response = $stripe->charges->create([
                 'amount' => $request->amount,
@@ -34,8 +31,4 @@ class StripeController extends Controller
         }
     }
 
-
-    public function success(){
-        return "Payment Successful";
-    }
 }

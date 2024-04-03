@@ -40,9 +40,8 @@ Route::middleware(['auth:sanctum'])->group(function () {
       Route::delete('/profile/{id}', [ProfileController::class, 'destroy'])->name('profiles.destroy');
       Route::post('/profile/upload', [ProfileController::class, 'upload']);
 
-      Route::get('/checkout', [StripeController::class, 'checkout']);
+
       Route::post('/payment', [StripeController::class, 'payment']);
-      Route::get('/success', [StripeController::class, 'success']);
 
 
       Route::get('/orders', [OrderController::class, 'index']);
@@ -50,7 +49,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
       Route::get('/order/{order}', [OrderController::class, 'show']);
       Route::put('/order/{order}', [OrderController::class, 'update']);
       Route::delete('/order/{order}', [OrderController::class, 'destory']);
-      
+
       Route::post('/order/upload', [OrderController::class, 'upload']);
 
 });
