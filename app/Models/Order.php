@@ -24,6 +24,12 @@ class Order extends Model
         'is_pickup',
         'is_delivered',
         'image',
-        'orderer_id'
+        'orderer_id',
+        'partner_id'
+    ];
+
+    protected $hidden = [
+        'created_at',
+        'updated_at'
     ];
 }

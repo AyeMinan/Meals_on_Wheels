@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Meal;
 use App\Models\Order;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -17,7 +18,21 @@ class OrderController extends Controller
 
         $aDayAgo = $currentTime->subHours(24);
 
-        $orders = Order::where('orderer_id', $user->id)->where('created_at', '>=', $aDayAgo)->get();
+        if($user->type === "partner"){
+        $orders = Order::where('partner_id', $user->id)
+        ->where('created_at', '>=', $aDayAgo)
+        ->get();
+        }else if($user->type === "member"){
+            $orders = Order::where('orderer_id', $user->id)
+        ->where('created_at', '>=', $aDayAgo)
+        ->get();
+        }else if($user->type === "caregiver"){
+            $orders = Order::where('orderer_id', $user->id)
+        ->where('created_at', '>=', $aDayAgo)
+        ->get();
+        }else{
+            return response()->json("Invalid User Type");
+        }
 
         if($orders->isEmpty()){
             return response()->json([
@@ -48,12 +63,12 @@ class OrderController extends Controller
             'is_delivered' => 'required',
             'image' => 'required',
             'temperature' => 'required',
-
+            'partner_id' => 'required',
         ]);
 
         // dd($validatedData);
         if($user && ($user->type === 'member' || $user->type === 'caregiver')){
-        $validatedData['orderer_id'] = $user->id;
+            $validatedData['orderer_id'] = $user->id;
     }else{
         return response()->json([
             'message' => 'Invalid User Type'
@@ -97,33 +112,24 @@ public function update(Request $request, $id){
             'message' => "order not found"
         ],404);
     }
-        $validatedData = $request->validate([
-            'name' => 'required',
-            'ingredients' => 'required',
-            'allergy_information' => 'nullable',
-            'nutritional_information' => 'nullable',
-            'dietary_restrictions' => 'nullable',
-            'price' => 'required|numeric',
-            'is_frozen' => 'required',
-            'delivery_status' => 'required',
-            'is_preparing' => 'required',
-            'is_finished' => 'required',
-            'is_pickup' => 'required',
-            'is_delivered' => 'required',
-            'image' => 'required',
-            'temperature' => 'required',
 
-        ]);
+    $order->update([
+        $order->name = $request->input('name', $order->name),
+        $order->ingredients  = $request->input('ingredients', $order->ingredients),
+        $order->allergy_information = $request->input('allergy_information', $order->allergy_information),
+        $order->nutritional_information = $request->input('nutritional_information',$order->allergy_information),
+        $order->dietary_restrictions = $request->input('dietary_restrictions',$order->dietary_restrictions),
+        $order->price = $request->input('price',$order->price),
+        $order->is_frozen = $request->input('is_frozen',$order->is_frozen),
+        $order->delivery_status = $request->input('delivery_status',$order->delivery_status),
+        $order->temperature = $request->input('temperature',$order->temperature),
+        $order->is_preparing = $request->input('is_preparing',$order->is_preparing),
+        $order->is_finished = $request->input('is_finished',$order->is_finished),
+        $order->is_pickup = $request->input('is_pickup',$order->is_pickup),
+        $order->is_delivered = $request->input('is_delivered',$order->is_delivered),
+        $order->image = $request->input('image',$order->image),
 
-        if($user && ($user->type === 'member' || $user->type === 'caregiver')){
-        $validatedData['orderer_id'] = $user->id;
-    }else{
-        return response()->json([
-            'message' => 'Invalid User Type'
-        ],500);
-    }
-
-    $order->update($validatedData);
+    ]);
 
     return response()->json(['Updated Ordered Meal' => $order], 201);
 }

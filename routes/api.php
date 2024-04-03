@@ -43,7 +43,6 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
       Route::post('/payment', [StripeController::class, 'payment']);
 
-
       Route::get('/orders', [OrderController::class, 'index']);
       Route::post('/order', [OrderController::class, 'store']);
       Route::get('/order/{order}', [OrderController::class, 'show']);
@@ -51,6 +50,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
       Route::delete('/order/{order}', [OrderController::class, 'destory']);
 
       Route::post('/order/upload', [OrderController::class, 'upload']);
+
 
 });
 
