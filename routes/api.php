@@ -50,6 +50,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
       Route::delete('/order/{order}', [OrderController::class, 'destory']);
 
       Route::post('/order/upload', [OrderController::class, 'upload']);
+      Route::get('order', [OrderController::class, 'showOrdersForRider']);
 
 
 });
@@ -84,4 +85,5 @@ Route::get('/partner-meal-deliveries/{partnerId}', [MealsDeliverController::clas
 
 // Route to retrieve scheduled meal deliveries for a volunteer
 Route::get('/volunteer-meal-deliveries/{volunteerId}', [MealsDeliverController::class, 'volunteerMealDeliveries'])->middleware('auth:sanctum');
+
 

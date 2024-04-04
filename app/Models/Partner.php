@@ -26,4 +26,7 @@ class Partner extends Model
     {
         return $this->hasMany(Meal::class);
     }
+    public function orders(){
+        return $this->hasMany(Order::class);
+    }
 }

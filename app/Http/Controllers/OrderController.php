@@ -2,8 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Caregiver;
 use App\Models\Meal;
+use App\Models\Member;
 use App\Models\Order;
+use App\Models\Partner;
+use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -64,6 +68,7 @@ class OrderController extends Controller
             'image' => 'required',
             'temperature' => 'required',
             'partner_id' => 'required',
+            'volunteer_id' => 'nullable',
         ]);
 
         // dd($validatedData);
@@ -145,6 +150,53 @@ public function destory($id){
 
     return response()->json(["messsage" => "Order Deleted Successful"]);
 }
+
+public function showOrdersForRider()
+{
+    $user = auth()->user();
+    $currentTime = Carbon::now();
+    $aDayAgo = $currentTime->subHours(24);
+
+    if ($user->type === 'volunteer') {
+        $orders = Order::where('volunteer_id', $user->id)
+            ->where('created_at', '>=', $aDayAgo)
+            ->get();
+
+        $orderDetails = [];
+        foreach ($orders as $order) {
+            $partnerShopAddress = Partner::where('id', $order->partner_id)->value('shop_address');
+            $memberAddress = null;
+            $caregiverAddress = null;
+
+                $member = User::where('id', $order->orderer_id)->first();
+                if ($member->type === 'member') {
+                    $memberAddress = $member->profile->address;
+                }
+
+                $caregiver = User::where('id', $order->orderer_id)->first();
+                if ($caregiver->type === 'caregiver') {
+                    $caregiverAddress = $caregiver->profile->address;
+                }
+
+
+            $orderDetails[] = [
+                'order' => $order,
+                'partner_shop_address' => $partnerShopAddress,
+                'member_address' => $memberAddress,
+                'caregiver_address' => $caregiverAddress,
+            ];
+        }
+
+        return response()->json([
+            "order_details" => $orderDetails
+        ], 200);
+    } else {
+        return response()->json([
+            "message" => "Invalid User Type"
+        ], 500);
+    }
+}
+
 public function upload(Request $request){
     $validator = Validator::make($request->all(),[
         'image' => 'required|image|mimes:jpeg,png,jpg,gif',

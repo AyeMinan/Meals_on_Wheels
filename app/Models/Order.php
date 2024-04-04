@@ -25,11 +25,16 @@ class Order extends Model
         'is_delivered',
         'image',
         'orderer_id',
-        'partner_id'
+        'partner_id',
+        'volunteer_id'
     ];
 
     protected $hidden = [
         'created_at',
         'updated_at'
     ];
+
+    public function partner(){
+        return $this->belongsTo(Partner::class);
+    }
 }
