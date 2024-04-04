@@ -158,8 +158,7 @@ public function showOrdersForRider()
     $aDayAgo = $currentTime->subHours(24);
 
     if ($user->type === 'volunteer') {
-        $orders = Order::where('volunteer_id', $user->id)
-            ->where('created_at', '>=', $aDayAgo)
+        $orders = Order::where('created_at', '>=', $aDayAgo)
             ->get();
 
         $orderDetails = [];
