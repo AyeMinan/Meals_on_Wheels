@@ -17,15 +17,15 @@ class MemberRepository implements MemberRepositoryInterface
 
     public function getAllMembers(){
 
-            $member = Member::with('user')->get();
-            $memberUsers = User::where('type', 'member')->get();
-            foreach($memberUsers as $memberUser){
-                $profile = Profile::where('user_id', $memberUser->id)->get();
-                if ($profile) {
-                    $memberProfile[] = $profile;
-                }
+        $member = Member::with('user')->get();
+        $memberUsers = User::where('type', 'member')->get();
+        foreach($memberUsers as $memberUser){
+            $profile = Profile::where('user_id', $memberUser->id)->get();
+            if ($profile) {
+                $memberProfile[] = $profile;
             }
-      return [$member, $memberProfile];
+        }
+  return [$member, $memberProfile];
     }
     public function storeMember(Request $request, $validatedData){
         // dd($validatedData);
@@ -91,63 +91,57 @@ class MemberRepository implements MemberRepositoryInterface
     public function updateMember($request, $id){
 
         $member = Member::where('id', $id)->first();
-        $memberUser = User::where('id', $member->user_id)->first();
-        $memberProfile = Profile::where('user_id', $memberUser->id)->first();
-
-        if(!$member && !$memberUser && !$memberProfile){
+        if(!$member){
             return null;
         }
+        $memberUser = User::where('id', $member->user_id)->first();
 
-        $member->first_name = $request['first_name'];
-        $member->last_name = $request['last_name'];
-        $member->gender = $request['gender'];
-        $member->date_of_birth = $request['date_of_birth'];
-        $member->age = $request['age'];
-        $member->emergency_contact_number = $request['emergency_contact_number'];
-        $member->dietary_restriction = $request['dietary_restriction'];
 
-        $member->save();
+            $member->first_name = $request->input('first_name', $member->first_name);
+            $member->last_name = $request->input('last_name', $member->last_name);
+            $member->gender = $request->input('gender', $member->gender);
+            $member->date_of_birth = $request->input('date_of_birth', $member->date_of_birth );
+            $member->age = $request->input('age', $member->age);
+            $member->emergency_contact_number = $request->input('emergency_contact_number', $member->emergency_contact_number);
+            $member->dietary_restriction = $request->input('dietary_restriction',  $member->dietary_restriction);
+            $member->save();
 
-        $memberProfile->user_name = $request['user_name'];
-        $memberProfile->image = $request['image'];
-        $memberProfile->address = $request['address'];
-        $memberProfile->phone_number = $request['phone_number'];
 
-        $path = 'uploads/profile';
-        if ($request->hasFile('image')) {
-            // Delete old image
-            if ($memberProfile->image && File::exists($path . '/' . $memberProfile->image)) {
-                File::delete($path . '/' . $memberProfile->image);
-            }
 
-            $file = $request->file('image');
-            $ext = $file->getClientOriginalExtension();
-            $filename = time() . '.' . $ext;
-            $file->move($path, $filename);
-            $memberProfile->image = $filename;
-        }
 
-        $memberProfile->save();
-
-        $memberUser->user_name = $request['user_name'];
-        $memberUser->email = $request['email'];
-        $memberUser->password = $request['password'];
-        $memberUser->confirm_password = $request['confirm_password'];
+        $memberUser->user_name = $request->input('user_name', $memberUser->user_name );
+        $memberUser->email = $request->input('email', $memberUser->email);
+        $memberUser->password = $request->input('password', $memberUser->password);
+        $memberUser->confirm_password = $request->input('confirm_password', $memberUser->confirm_password);
 
         $memberUser->save();
 
+
+
+
+        $memberProfile = Profile::where('user_id', $memberUser->id)->first();
+        $memberProfile->user_name = $request->input('user_name', $memberProfile->user_name );
+        $memberProfile->image = $request->input('image', $memberProfile->image );
+        $memberProfile->address =  $request->input('address', $memberProfile->address );
+        $memberProfile->phone_number =  $request->input('phone_number', $memberProfile->phone_number );
+
+
+        $memberProfile->save();
+
+        
     }
 
     public function deleteMember($id){
         $member = Member::where('id', $id)->first();
-
+        $memberUser = User::where('id', $member->user_id)->first();
         if(!$member){
             return null;
         }
 
         $member->delete();
-        $member->profile()->delete();
         $member->user()->delete();
+        $memberUser->profile()->delete();
+
 
     }
 }

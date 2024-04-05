@@ -78,17 +78,14 @@ class DonorRepository implements DonorRepositoryInterface{
         }
     }
     public function deleteDonor($id)
-    {
-        $donor = Donor::where('id', $id)->first();
-        $donorUser= User::where('id', $donor->user_id)->first();
-        $donorProfile= Profile::where('user_id', $donor->user_id)->first();
-
+    {   $donor = Donor::find($id);
+        $donorUser = User::where('id', $donor->user_id)->first();
         try{
             $donor->delete();
-            $donorUser->delete();
-            $donorProfile->delete();
+            $donor->user()->delete();
+            $donorUser->profile()->delete();
 
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             // Handle exceptions if needed
             return false; // Deletion failed
         }
@@ -96,58 +93,41 @@ class DonorRepository implements DonorRepositoryInterface{
 
     public function updateDonor($request, $id)
     {
-        $donor = Donor::where('id', $id)->first();
-        $donorUser= User::where('id', $donor->user_id)->first();
-        $donorProfile= Profile::where('user_id', $donor->user_id)->first();
-
-
-        if (!$donor) {
-            return ['success' => false, 'message' => 'Donor not found'];
+      try{
+        $donor = donor::where('id', $id)->first();
+        if(!$donor){
+            return null;
         }
 
-        try {
-            $donor->update([
-                'first_name' => $request->first_name,
-                'last_name' => $request->last_name,
-                'gender' => $request->gender,
-                'date_of_birth'=> $request->date_of_birth,
-            ]);
+        $donorUser = User::where('id', $donor->user_id)->first();
 
-            // dd($donorUser);
-            if ($donorUser) {
-                $donorUser->email =  $request->email;
-                $donorUser->user_name =  $request->user_name;
-                $donorUser->password =  $request->password;
-                $donorUser->confirm_password =  $request->confirm_password;
-                $donorUser->type =  $request->type;
+            $donor->first_name = $request->input('first_name', $donor->first_name);
+            $donor->last_name = $request->input('last_name', $donor->last_name);
+            $donor->gender = $request->input('gender', $donor->gender);
+            $donor->date_of_birth = $request->input('date_of_birth',  $donor->date_of_birth);
 
-            }
-            $donorUser->save();
+        $donor->save();
 
-                if ($donorProfile) {
-                        $donorProfile->image = $request->image;
-                        $donorProfile->user_name= $request->user_name;
-                        $donorProfile->address = $request->address;
-                        $donorProfile->phone_number = $request->phone_number;
+            $donorUser->user_name = $request->input('user_name', $donorUser->user_name );
+            $donorUser->email = $request->input('email', $donorUser->email);
+            $donorUser->password = $request->input('password', $donorUser->password);
+            $donorUser->confirm_password = $request->input('confirm_password', $donorUser->confirm_password);
 
-                    $path = 'uploads/profile';
-                    if ($request->hasFile('image')) {
-                        // Delete old image
-                        if ($donorProfile->image && File::exists($path . '/' . $donorProfile->image)) {
-                            File::delete($path . '/' . $donorProfile->image);
-                        }
+        $donorUser->save();
 
-                        $file = $request->file('image');
-                        $ext = $file->getClientOriginalExtension();
-                        $filename = time() . '.' . $ext;
-                        $file->move($path, $filename);
-                        $donorProfile->image = $filename;
-                    }
-                }
-                $donorProfile->save();
-                return response()->json(['message' => 'Donor updated successfully'], 200);
-            } catch(\Exception $e) {
-                return response()->json(['message' => 'Failed to update donor'], 500);
+            $donorProfile = Profile::where('user_id', $donorUser->id)->first();
+
+            $donorProfile->user_name = $request->input('user_name', $donorProfile->user_name );
+            $donorProfile->image = $request->input('image', $donorProfile->image );
+            $donorProfile->address =  $request->input('address', $donorProfile->address );
+            $donorProfile->phone_number =  $request->input('phone_number', $donorProfile->phone_number );
+
+
+        $donorProfile->save();
+
+
+            } catch(Exception $e) {
+                return response()->json(['message' => $e->getMessage()], 500);
         }
     }
 

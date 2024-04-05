@@ -30,13 +30,14 @@ class VolunteerController extends Controller
 
     public function store(VolunteerRequest $request)
     {
+
         $validatedData=$request->validated();
-        $volunteer=$this->volunteerService->storeVolunteer($validatedData);
+         $this->volunteerService->storeVolunteer($validatedData);
 
         return response()->json([
-            'success'=>true,
-            'volunteer'=>$volunteer,
-        ]);
+            'message'=> "Volunteer created successful"
+
+        ],201);
 
     }
 
@@ -47,18 +48,16 @@ class VolunteerController extends Controller
         return response()->json([
             'success'=>true,
             'volunteer'=>$volunteer,
-        ]);
+        ],200);
     }
 
 
-    public function update(VolunteerRequest $request, $id)
+    public function update(Request $request, $id)
     {
-        $validatedData=$request->validated();
-        $volunteer=$this->volunteerService->updateVolunteer($validatedData,$id);
+        $this->volunteerService->updateVolunteer($request, $id);
         return response()->json([
-            'success'=>true,
-            'volunteer'=>$volunteer,
-        ]);
+            'message'=> "Volunteer Data Updated",
+        ],200);
     }
 
     /**
@@ -68,8 +67,8 @@ class VolunteerController extends Controller
     {
         $this->volunteerService->deleteVolunteer($id);
         return response()->json([
-            'success'=>true,
+            'message'=> "Volunteer Data Deleted Successful",
 
-        ]);
+        ],200);
     }
 }

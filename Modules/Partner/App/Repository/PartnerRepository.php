@@ -80,44 +80,48 @@ class PartnerRepository implements PartnerInterface
 public function update($request, $id){
 
     $partner = Partner::where('id', $id)->first();
-    $partnerUser = User::where('id', $partner->user_id)->first();
-    $partnerProfile = Profile::where('user_id', $partnerUser->id)->first();
+        if(!$partner){
+            return null;
+        }
 
-    if(!$partner && !$partnerUser && !$partnerProfile){
-        return null;
-    }
+        $partnerUser = User::where('id', $partner->user_id)->first();
 
-    $partner->first_name = $request['first_name'];
-    $partner->last_name = $request['last_name'];
-    $partner->gender = $request['shop_name'];
-    $partner->date_of_birth = $request['shop_address'];
+            $partner->first_name = $request->input('first_name', $partner->first_name);
+            $partner->last_name = $request->input('last_name', $partner->last_name);
+            $partner->shop_name = $request->input('shop_name', $partner->shop_name);
+            $partner->shop_address = $request->input('shop_address', $partner->shop_address);
+            $partner->save();
 
-    $partner->save();
+            $partnerUser->user_name = $request->input('user_name', $partnerUser->user_name );
+            $partnerUser->email = $request->input('email', $partnerUser->email);
+            $partnerUser->password = $request->input('password', $partnerUser->password);
+            $partnerUser->confirm_password = $request->input('confirm_password', $partnerUser->confirm_password);
 
-    $partnerProfile->user_name = $request['user_name'];
-    $partnerProfile->image = $request['image'];
-    $partnerProfile->address = $request['address'];
-    $partnerProfile->phone_number = $request['phone_number'];
+            $partnerUser->save();
 
-    $partnerProfile->save();
+            $partnerProfile = Profile::where('user_id', $partnerUser->id)->first();
+            $partnerProfile->user_name = $request->input('user_name', $partnerProfile->user_name );
+            $partnerProfile->image = $request->input('image', $partnerProfile->image );
+            $partnerProfile->address =  $request->input('address', $partnerProfile->address );
+            $partnerProfile->phone_number =  $request->input('phone_number', $partnerProfile->phone_number );
 
-    $partnerUser->user_name = $request['user_name'];
-    $partnerUser->email = $request['email'];
-    $partnerUser->password = $request['password'];
-    $partnerUser->confirm_password = $request['confirm_password'];
 
-    $partnerUser->save();
+        $partnerProfile->save();
+
 
     }
 
     public function delete($id)
     {
         $partner = Partner::find($id);
+        $partnerUser = User::where('id', $partner->user_id)->first();
 
         if ($partner) {
 
             $partner->delete();
-            return $partner;
+            $partner->user()->delete();
+            $partnerUser->profile()->delete();
+
         }
         return null;
     }

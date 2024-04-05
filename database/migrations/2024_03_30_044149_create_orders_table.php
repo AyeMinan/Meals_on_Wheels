@@ -27,7 +27,9 @@ return new class extends Migration
             $table->string('is_finished')->default(false);
             $table->string('is_pickup')->default(false);
             $table->string('is_delivered')->default(false);
+            $table->foreignId('partner_id')->onDelete('cascade');
             $table->foreignId('orderer_id')->onDelete('cascade');
+            $table->foreignId('volunteer_id')->onDelete('cascade')->nullable();
             $table->timestamps();
         });
     }

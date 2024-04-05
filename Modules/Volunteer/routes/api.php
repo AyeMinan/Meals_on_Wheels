@@ -15,5 +15,8 @@ use Modules\Volunteer\App\Http\Controllers\VolunteerController;
     |
 */
 
+Route::middleware(['auth:sanctum'])->prefix('v1')->name('api.')->group(function () {
+    Route::get('volunteer', fn (Request $request) => $request->user())->name('volunteer');
 
+});
 

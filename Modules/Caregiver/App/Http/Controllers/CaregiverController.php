@@ -23,6 +23,7 @@ class CaregiverController extends Controller
     {
         [$caregiver, $caregiverProfile] = $this->caregiverService->getAllCaregivers();
         return response()->json([
+            "CSRF Token" => csrf_token(),
             "caregiver" => $caregiver,
             "Profile" => $caregiverProfile
         ],200);

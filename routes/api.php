@@ -40,18 +40,18 @@ Route::middleware(['auth:sanctum'])->group(function () {
       Route::delete('/profile/{id}', [ProfileController::class, 'destroy'])->name('profiles.destroy');
       Route::post('/profile/upload', [ProfileController::class, 'upload']);
 
-      Route::get('/checkout', [StripeController::class, 'checkout']);
-      Route::post('/payment', [StripeController::class, 'payment']);
-      Route::get('/success', [StripeController::class, 'success']);
 
+      Route::post('/payment', [StripeController::class, 'payment']);
 
       Route::get('/orders', [OrderController::class, 'index']);
       Route::post('/order', [OrderController::class, 'store']);
       Route::get('/order/{order}', [OrderController::class, 'show']);
       Route::put('/order/{order}', [OrderController::class, 'update']);
       Route::delete('/order/{order}', [OrderController::class, 'destory']);
-      
+
       Route::post('/order/upload', [OrderController::class, 'upload']);
+      Route::get('order', [OrderController::class, 'showOrdersForRider']);
+
 
 });
 
@@ -85,4 +85,5 @@ Route::get('/partner-meal-deliveries/{partnerId}', [MealsDeliverController::clas
 
 // Route to retrieve scheduled meal deliveries for a volunteer
 Route::get('/volunteer-meal-deliveries/{volunteerId}', [MealsDeliverController::class, 'volunteerMealDeliveries'])->middleware('auth:sanctum');
+
 

@@ -113,13 +113,7 @@ class MemberController extends Controller
         $startTime = microtime(true);
 
         try{
-        $member = $this->memberService->deleteMember($id);
-
-        if($member == null){
-            return response()->json([
-                'message' => "Member not fount",
-            ],404);
-        }
+         $this->memberService->deleteMember($id);
         return response()->json([
             'message' => "Member has been successfully deleted"
         ],200);
