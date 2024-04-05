@@ -63,9 +63,9 @@ class ProfileController extends Controller
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'name' => "required|string",
+            'user_name' => "required|string",
             'image' => "image|nullable",
-            'phone' => "required|string",
+            'phone_number' => "required|string",
             'address' => "required|string",
         ]);
 
@@ -78,8 +78,8 @@ class ProfileController extends Controller
         $userId = Auth::id();
 
         $profile = new Profile();
-        $profile->name = $request->name;
-        $profile->phone = $request->phone;
+        $profile->user_name = $request->user_name;
+        $profile->phone_number = $request->phone_number;
         $profile->address = $request->address;
         $profile->user_id = $userId;
 
@@ -103,6 +103,7 @@ class ProfileController extends Controller
 
     public function update(Request $request)
     {
+
         $userId = Auth::id();
 
         $profile = Profile::where('user_id', $userId)->first();
@@ -114,75 +115,74 @@ class ProfileController extends Controller
             ], 403);
         }
 
-        // Validate request
-        $validator = Validator::make($request->all(), [
-            'name' => 'string|nullable',
-            'image' => 'image|nullable',
-            'phone' => 'string|nullable',
-            'address' => 'string|nullable',
-            'first_name' => 'string|required_if:type,member,caregiver,donor,partner,volunteer|nullable',
-            'last_name' => 'string|required_if:type,member,caregiver,donor,partner,volunteer|nullable',
-            'gender' => 'string|required_if:type,member,caregiver,donor,partner,volunteer|nullable',
-            'age' => 'integer|required_if:type,member|nullable',
-            'emergency_contact_number' => 'string|required_if:type,member,caregiver|nullable',
-            'date_of_birth' => 'date|required_if:type,member,caregiver,donor,partner,volunteer|nullable',
-            'dietary_restriction' => 'string|required_if:type,member|nullable',
-            'relationship_with_member' => 'string|required_if:type,caregiver|nullable',
-            'shop_name' => 'string|required_if:type,partner|nullable',
-            'shop_address' => 'string|required_if:type,partner|nullable',
-            'partner_type' => 'string|required_if:type,partner|nullable',
-            'location' => 'string|required_if:type,partner|nullable',
-            'volunteer_type' => 'string|required_if:type,volunteer|nullable',
-            'availability' => 'string|required_if:type,volunteer|nullable',
-            'donation_amount' => 'numeric|required_if:type,donor|nullable',
-            'donation_date' => 'date|required_if:type,donor|nullable',
-        ]);
+       // Validate request
+    $validator = Validator::make($request->all(), [
+            'user_name' => 'required',
+            'email' => ['required', 'email'],
+            'password' => ['required', 'min:8'],
+            'confirm_password' => ['required', 'min:8'],
+            'type' => 'required|string|in:member,caregiver,partner,volunteer,donor',
+            'age' => 'required_if:type,member|integer',
+            'phone_number' => 'required|string',
+            'date_of_birth' => 'required_if:type,member,volunteer|date',
+            'address' => 'required|string',
+            'first_name' => 'required|string',
+            'last_name' => 'required|string',
+            'gender' => 'required_if:type,member,volunteer|in:male,female,other',
+            'emergency_contact_number' => 'required_if:type,member|string',
+            'dietary_restriction' => 'required_if:type,member|string',
+            'relationship_with_member' => 'required_if:type,caregiver|string',
+            'shop_name' => 'required_if:type,partner|string',
+            'shop_address' => 'required_if:type,partner|string',
+            'image' => 'required',
+    ]);
 
-        if ($validator->fails()) {
-            return response()->json([
-                'message' => $validator->errors(),
+    $validatorMessage = collect($validator->errors())->flatMap(function ($e, $field){
+        return [$field => $e[0]];
+    });
+    if($validator->fails()){
+        return response()->json([
+            'status' => '422',
+            'error'  => $validatorMessage
+        ],422);
+    }
+       // Update profile data
+$profile->update([
+    'user_name' => $request->input('user_name', $profile->user_name),
+    'phone_number' => $request->input('phone_number', $profile->phone_number),
+    'address' => $request->input('address', $profile->address),
+
+]);
+
+// Update user data
+$profile->user->update([
+    'name' => $request->input('user.name', $profile->user->name),
+    'email' => $request->input('user.email', $profile->user->email),
+    'password' => bcrypt($request->input('user.password', $profile->user->password)), // Update password if needed
+    'type' => $request->input('user.type', $profile->user->type),
+
+]);
+
+// Load additional details based on user type
+switch ($profile->user->type) {
+    case 'member':
+        if ($profile->user->member) {
+            $profile->user->member->update([
+                'age' => $request->filled('age') ? $request->input('age') : $profile->user->member->age,
+                'health_condition' => $request->input('health_condition', $profile->user->member->health_condition),
+                'dietary_requirements' => $request->input('dietary_requirements', $profile->user->member->dietary_requirements),
+
             ]);
         }
+        break;
 
-        // Update profile data
-        $profile->update([
-            'name' => $request->input('name', $profile->name),
-            'phone' => $request->input('phone', $profile->phone),
-            'address' => $request->input('address', $profile->address),
-        ]);
-
-        // Update user data
-        $profile->user->update([
-            'name' => $request->input('user.name', $profile->user->name),
-            'email' => $request->input('user.email', $profile->user->email),
-            'password' => bcrypt($request->input('user.password', $profile->user->password)), // Update password if needed
-            'type' => $request->input('user.type', $profile->user->type),
-        ]);
-
-        // Load additional details based on user type
-        switch ($profile->user->type) {
-            case 'member':
-                if ($profile->user->member) {
-                    $profile->user->member->update([
-                        'first_name' => $request->input('first_name', $profile->user->member->first_name),
-                        'last_name' => $request->input('last_name', $profile->user->member->last_name),
-                        'gender' => $request->input('gender', $profile->user->member->gender),
-                        'age' => $request->input('age', $profile->user->member->age),
-                        'emergency_contact_number' => $request->input('emergency_contact_number', $profile->user->member->emergency_contact_number),
-                        'date_of_birth' => $request->input('date_of_birth', $profile->user->member->date_of_birth),
-                        'dietary_restriction' => $request->input('dietary_restriction', $profile->user->member->dietary_restriction),
-                    ]);
-                }
-                break;
 
             case 'caregiver':
                 if ($profile->user->caregiver) {
                     $profile->user->caregiver->update([
-                        'first_name' => $request->input('first_name', $profile->user->caregiver->first_name),
-                        'last_name' => $request->input('last_name', $profile->user->caregiver->last_name),
-                        'gender' => $request->input('gender', $profile->user->caregiver->gender),
-                        'date_of_birth' => $request->input('date_of_birth', $profile->user->caregiver->date_of_birth),
-                        'relationship_with_member' => $request->input('relationship_with_member', $profile->user->caregiver->relationship_with_member),
+                        'contact_information' => $request->input('contact_information',$profile->user->caregiver->contact_information),
+                        'relationship_to_member' => $request->input('relationship_to_member',$profile->user->caregiver->relationship_to_member)
+
                     ]);
                 }
                 break;
@@ -190,12 +190,9 @@ class ProfileController extends Controller
             case 'partner':
                 if ($profile->user->partner) {
                     $profile->user->partner->update([
-                        'first_name' => $request->input('first_name', $profile->user->partner->first_name),
-                        'last_name' => $request->input('last_name', $profile->user->partner->last_name),
-                        'shop_name' => $request->input('shop_name', $profile->user->partner->shop_name),
-                        'shop_address' => $request->input('shop_address', $profile->user->partner->shop_address),
-                        'partner_type' => $request->input('partner_type', $profile->user->partner->partner_type),
-                        'location' => $request->input('location', $profile->user->partner->location),
+                        'partner_type' => $request->input('partner_type',$profile->user->partner->partner_type),
+                        'location' => $request->input('location',$profile->user->partner->location),
+
                     ]);
                 }
                 break;
@@ -204,7 +201,7 @@ class ProfileController extends Controller
                 if ($profile->user->volunteer) {
                     $profile->user->volunteer->update([
                         'volunteer_type' => $request->input('volunteer_type', $profile->user->volunteer->volunteer_type),
-                        'availability' => $request->input('availability', $profile->user->volunteer->availability),
+                'availability' => $request->input('availability', $profile->user->volunteer->availability),
                     ]);
                 }
                 break;
@@ -212,28 +209,12 @@ class ProfileController extends Controller
             case 'donor':
                 if ($profile->user->donor) {
                     $profile->user->donor->update([
-                        'first_name' => $request->input('first_name', $profile->user->donor->first_name),
-                        'last_name' => $request->input('last_name', $profile->user->donor->last_name),
-                        'gender' => $request->input('gender', $profile->user->donor->gender),
-                        'date_of_birth' => $request->input('date_of_birth', $profile->user->donor->date_of_birth),
+                        'donation_amount' => $request->input('donation_amount', $profile->user->donor->donation_amount),
+                'donation_date' => $request->input('donation_date', $profile->user->donor->donation_date),
+
                     ]);
                 }
                 break;
-        }
-
-        // Update image
-        $path = 'uploads/profile';
-        if ($request->hasFile('image')) {
-            // Delete old image
-            if ($profile->image && File::exists($path . '/' . $profile->image)) {
-                File::delete($path . '/' . $profile->image);
-            }
-
-            $file = $request->file('image');
-            $ext = $file->getClientOriginalExtension();
-            $filename = time() . '.' . $ext;
-            $file->move($path, $filename);
-            $profile->image = $filename;
         }
 
         $profile->save();
@@ -259,5 +240,32 @@ class ProfileController extends Controller
         return response()->json([
             'message' => 'Profile deleted successfully.',
         ], 200);
+    }
+    public function upload(Request $request){
+        $validator = Validator::make($request->all(),[
+            'image' => 'required|image|mimes:jpeg,png,jpg,gif',
+        ]);
+        $validatorMessage = collect($validator->errors())->flatMap(function ($e, $field){
+            return [$field => $e[0]];
+        });
+        if($validator->fails()){
+            return response()->json([
+                'status' => '422',
+                'error'  => $validatorMessage
+            ],422);
+        }
+            // Handle image upload
+            $path = 'uploads/profile';
+            if ($request->hasFile('image')) {
+                $file = $request->file('image');
+                $ext = $file->getClientOriginalExtension();
+                $filename = time() . '.' . $ext;
+                $file->move($path, $filename);
+                $imagePath = $path . '/' . $filename;
+            }
+            return response()->json([
+                    "message" => "Upload Successful",
+                    "imagePath" => $imagePath
+                ],200);
     }
 }

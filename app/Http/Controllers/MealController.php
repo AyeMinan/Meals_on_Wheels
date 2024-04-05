@@ -4,8 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Models\Meal;
 use App\Models\User;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Validator;
 
 class MealController extends Controller
 {
@@ -35,7 +37,6 @@ class MealController extends Controller
     {
 
         $user = auth()->user();
-
         $validatedData = $request->validate([
             'name' => 'required',
             'ingredients' => 'required',
@@ -77,13 +78,15 @@ class MealController extends Controller
 
     public function update(Request $request, $id)
     {
+        try{
+
         $meal = Meal::find($id);
         $user = auth()->user();
         if (!$meal) {
             return response()->json(['error' => 'Meal not found'], 404);
         }
 
-        $validatedData = $request->validate([
+        $validator = Validator::make($request->all(),[
             'name' => 'required',
             'ingredients' => 'required',
             'allergy_information' => 'nullable',
@@ -96,33 +99,48 @@ class MealController extends Controller
             'is_finished' => 'required|string',
             'is_pickup' => 'required|string',
             'is_delivered' => 'required|string',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif', // Validate image upload
+            'image' => 'required',
             'temperature' => 'required'
         ]);
-
-
-        // Handle image upload
-        $path = 'uploads/meals';
-        if ($request->hasFile('image')) {
-            // Delete old image
-            if ($meal->image && File::exists($path . '/' . $meal->image)) {
-                File::delete($path . '/' . $meal->image);
-            }
-
-            $file = $request->file('image');
-            $ext = $file->getClientOriginalExtension();
-            $filename = time() . '.' . $ext;
-            $file->move($path, $filename);
-            $validatedData['image'] = $filename;
+        $validatorMessage = collect($validator->errors())->flatMap(function ($e, $field){
+            return [$field => $e[0]];
+        });
+        if($validator->fails()){
+            return response()->json([
+                'status' => '422',
+                'error'  => $validatorMessage
+            ],422);
         }
-
         if($user && $user->type === 'partner'){
-            $validatedData['partner_id'] = $user->id;
+            $partner_id = $user->id;
         }
 
-        $meal->update($validatedData);
+        $meal->update([
+            'name' => $request->name,
+            'ingredients' => $request->ingredients,
+            'allergy_information' => $request->allergy_information,
+            'nutritional_information' => $request->nutritional_information,
+            'dietary_restrictions' => $request->dietary_restrictions,
+            'price' => $request->price,
+            'is_frozen' => $request->is_frozen,
+            'delivery_status' => $request->delivery_status,
+            'temperature' => $request->temperature,
+            'is_preparing' => $request->is_preparing,
+            'is_finished' => $request->is_finished,
+            'is_pickup' => $request->is_pickup,
+            'is_delivered' => $request->is_delivered,
+            'image' => $request->image,
+            'partner_id' => $partner_id
 
-        return response()->json(['meal' => $meal], 200);
+        ]);
+
+        return response()->json([
+            "message" => "Updated Successful",
+            'meal' => $meal
+        ], 200);
+        }catch(Exception $e){
+            return response()->json(['error message' => $e->getMessage()],500);
+        }
     }
 
     public function destroy($id)
@@ -136,5 +154,33 @@ class MealController extends Controller
         $meal->delete();
 
         return response()->json(['message' => 'Meal deleted successfully'], 200);
+    }
+
+    public function upload(Request $request){
+        $validator = Validator::make($request->all(),[
+            'image' => 'required|image|mimes:jpeg,png,jpg,gif',
+        ]);
+        $validatorMessage = collect($validator->errors())->flatMap(function ($e, $field){
+            return [$field => $e[0]];
+        });
+        if($validator->fails()){
+            return response()->json([
+                'status' => '422',
+                'error'  => $validatorMessage
+            ],422);
+        }
+            // Handle image upload
+            $path = 'uploads/meals';
+            if ($request->hasFile('image')) {
+                $file = $request->file('image');
+                $ext = $file->getClientOriginalExtension();
+                $filename = time() . '.' . $ext;
+                $file->move($path, $filename);
+                $imagePath = $path . '/' . $filename;
+            }
+            return response()->json([
+                    "message" => "Upload Successful",
+                    "imagePath" => $imagePath
+                ],200);
     }
 }
