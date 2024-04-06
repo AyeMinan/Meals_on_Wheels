@@ -70,6 +70,53 @@ class MealController extends Controller
         }
         return response()->json(['data' => $partnerMeals], 200);
     }
+
+    public function showPartnerMealsById($id){
+        $user = auth()->user();
+        if($user->type === 'partner'){
+        $partnerMeals = Meal::where('id', $id)->where('partner_id', $user->id)->get();
+        }else{
+            return response()->json([
+                "message" => "Invalid User Type"
+            ]);
+        }
+        return response()->json(['data' => $partnerMeals], 200);
+    }
+
+    public function show($id){
+        $user = auth()->user();
+        $partners = User::where('type', 'partner')->get();
+        $mealById = null;
+        if($user->type === 'member' || $user->type === 'caregiver'){
+        foreach($partners as $partner){
+            $partnerProfiles = Profile::where('user_id', $partner->id)->get();
+            $partnerTownship = [];
+            foreach($partnerProfiles as $partnerProfile){
+            if ($partnerProfile && $partnerProfile->township) {
+                $partnerTownship[] = $partnerProfile->township;
+
+            }
+        }
+            $userTownship = $user->profile->township;
+
+                    if (in_array($userTownship, $partnerTownship)) {
+                     $meal = Meal::where('id', $id)->where('partner_id', $partner->id)->first();
+                     if($meal){
+                        $mealById = $meal;
+                     }
+
+
+                }
+
+        }
+
+    }else{
+        return response()->json([
+            "message" => "Invalid User Type"
+        ],500);
+    }
+        return response()->json(["meal by id" => $mealById],200);
+    }
     public function store(Request $request)
     {
 

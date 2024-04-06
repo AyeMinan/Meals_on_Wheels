@@ -63,6 +63,7 @@ Route::controller(MealController::class)->group(function(){
     Route::get('/meals','index')->middleware('auth:sanctum');
     Route::get('/meal','showMealByTownship')->middleware('auth:sanctum');
     Route::get('/showPartnerMeals', 'showPartnerMeals')->middleware('auth:sanctum');
+    Route::get('/showPartnerMeal/{id}', 'showPartnerMealsById')->middleware('auth:sanctum');
     Route::post('/meal','store')->middleware(['auth:sanctum', 'partner']);
     Route::get('/meal/{meal}','show')->middleware('auth:sanctum');
     Route::put('/meal/{meal}','update')->middleware(['auth:sanctum', 'partner']);
