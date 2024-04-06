@@ -7,6 +7,7 @@ use App\Models\Meal;
 use App\Models\Member;
 use App\Models\Order;
 use App\Models\Partner;
+use App\Models\Profile;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -160,34 +161,52 @@ public function showOrdersForRider()
     $user = auth()->user();
     $currentTime = Carbon::now();
     $aDayAgo = $currentTime->subHours(24);
+    $partners = User::where('type', 'partner')->get();
+    $orderDetails = []; // Initialize the array outside of the loop
 
     if ($user->type === 'volunteer') {
-        $orders = Order::where('created_at', '>=', $aDayAgo)
-            ->get();
+        foreach ($partners as $partner) {
+            $partnerProfiles = Profile::where('user_id', $partner->id)->get();
+            $partnerTownship = [];
 
-        $orderDetails = [];
-        foreach ($orders as $order) {
-            $partnerShopAddress = Partner::where('id', $order->partner_id)->value('shop_address');
-            $memberAddress = null;
-            $caregiverAddress = null;
-
-                $member = User::where('id', $order->member_id)->first();
-                if ($member->type === 'member') {
-                    $memberAddress = $member->profile->address;
+            foreach ($partnerProfiles as $partnerProfile) {
+                if ($partnerProfile->township) {
+                    $partnerTownship[] = $partnerProfile->township;
                 }
+            }
 
-                $caregiver = User::where('id', $order->caregiver_id)->first();
-                if ($caregiver->type === 'caregiver') {
-                    $caregiverAddress = $caregiver->profile->address;
+            $volunteerTownship = $user->profile->township;
+
+            // Retrieve orders only if partner's township matches volunteer's township
+            if (in_array($volunteerTownship, $partnerTownship)) {
+                $orders = Order::where('created_at', '>=', $aDayAgo)
+                    ->where('partner_id', $partner->id)
+                    ->get();
+
+                foreach ($orders as $order) {
+                    $user = User::where('id', $order->partner_id)->first();
+                    $partnerShopAddress = $user->partner->shop_address;
+                    $memberAddress = null;
+                    $caregiverAddress = null;
+
+                    $member = User::where('id', $order->member_id)->first();
+                    if ($member && $member->type === 'member') {
+                        $memberAddress = $member->profile->address;
+                    }
+
+                    $caregiver = User::where('id', $order->caregiver_id)->first();
+                    if ($caregiver && $caregiver->type === 'caregiver') {
+                        $caregiverAddress = $caregiver->profile->address;
+                    }
+
+                    $orderDetails[] = [
+                        'order' => $order,
+                        'partner_shop_address' => $partnerShopAddress,
+                        'member_address' => $memberAddress,
+                        'caregiver_address' => $caregiverAddress,
+                    ];
                 }
-
-
-            $orderDetails[] = [
-                'order' => $order,
-                'partner_shop_address' => $partnerShopAddress,
-                'member_address' => $memberAddress,
-                'caregiver_address' => $caregiverAddress,
-            ];
+            }
         }
 
         return response()->json([
@@ -199,6 +218,9 @@ public function showOrdersForRider()
         ], 500);
     }
 }
+
+
+
 
 public function upload(Request $request){
     $validator = Validator::make($request->all(),[
