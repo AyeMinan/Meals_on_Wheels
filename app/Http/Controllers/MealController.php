@@ -25,18 +25,21 @@ class MealController extends Controller
         $partners = User::where('type', 'partner')->get();
         $mealsByTownship = [];
 
+        if($user->type === 'member' || $user->type === 'caregiver'){
         foreach($partners as $partner){
-            $partnerProfile = Profile::where('user_id', $partner->id)->first();
-
+            $partnerProfiles = Profile::where('user_id', $partner->id)->get();
+            $partnerTownship = [];
+            foreach($partnerProfiles as $partnerProfile){
             if ($partnerProfile && $partnerProfile->township) {
-                $partnerTownship = $partnerProfile->township;
-                $userTownship = $user->profile->township;
+                $partnerTownship[] = $partnerProfile->township;
 
 
+            }
+            $userTownship = $user->profile->township;
                 $meals = Meal::where('partner_id', $partner->id)->get();
 
                 foreach($meals as $meal){
-                    if ($partnerTownship === $userTownship) {
+                    if (in_array($userTownship, $partnerTownship)) {
                         $mealsByTownship[] = [
                             'meal' => $meal
                         ];
@@ -46,10 +49,14 @@ class MealController extends Controller
         }
 
         if (empty($mealsByTownship)) {
-            return response()->json(["message" => "No Valid Meal"]);
+            return response()->json(["message" => "No Valid Meal"],500);
         }
-
-        return response()->json(["meals by township" => $mealsByTownship]);
+    }else{
+        return response()->json([
+            "message" => "Invalid User Type"
+        ],500);
+    }
+        return response()->json(["meals by township" => $mealsByTownship],200);
     }
 
     public function store(Request $request)
