@@ -18,6 +18,7 @@ class PartnerRequest extends FormRequest
             'confirm_password' => 'required|string|min:8|confirmed',
             'phone_number' => 'required|string|max:20',
             'address' => 'required|string',
+            'township' => 'required|string',
             'image' => 'nullable|image|max:2048',
             'first_name' => 'required',
             'last_name' => 'required',

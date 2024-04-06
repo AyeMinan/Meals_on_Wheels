@@ -51,6 +51,7 @@ class PartnerRepository implements PartnerInterface
             'user_name' => $validatedData['user_name'],
             'image'=> $validatedData['image'],
             'address' => $validatedData['address'],
+            'township' => $validatedData['address'],
             'phone_number' => $validatedData['phone_number'],
 
         ]);
@@ -103,6 +104,7 @@ public function update($request, $id){
             $partnerProfile->user_name = $request->input('user_name', $partnerProfile->user_name );
             $partnerProfile->image = $request->input('image', $partnerProfile->image );
             $partnerProfile->address =  $request->input('address', $partnerProfile->address );
+            $partnerProfile->township =  $request->input('township', $partnerProfile->township );
             $partnerProfile->phone_number =  $request->input('phone_number', $partnerProfile->phone_number );
 
 

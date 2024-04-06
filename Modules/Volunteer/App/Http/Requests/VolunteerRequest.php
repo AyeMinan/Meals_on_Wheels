@@ -23,6 +23,7 @@ class VolunteerRequest extends FormRequest
             'phone_number' => 'required|string|max:20',
             'date_of_birth' => 'required|date|before:today',
             'address' => 'required|string',
+            'township' => 'required|string',
             'image' => 'nullable|image|max:2048',
         ];
     }

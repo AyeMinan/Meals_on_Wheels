@@ -31,6 +31,7 @@ class AuthController extends Controller
             'phone_number' => 'required|string',
             'date_of_birth' => 'required_if:type,member,volunteer|date',
             'address' => 'required|string',
+            'township' => 'required|string',
             'gender' => 'required_if:type,member,volunteer|in:male,female,other',
             'emergency_contact_number' => 'required_if:type,member|string',
             'dietary_restriction' => 'required_if:type,member|string',
@@ -65,6 +66,7 @@ class AuthController extends Controller
             'user_name' => $request->user_name,
             'address' => $request->address,
             'phone_number' => $request->phone_number,
+            'township' => $request->township,
         ]);
         $path = 'uploads/profile';
         if ($request->hasFile('image')) {

@@ -48,6 +48,7 @@ class DonorRepository implements DonorRepositoryInterface{
             'image' =>$validatedData['image'] ,
             'phone_number' => $validatedData['phone_number'],
             'address' =>$validatedData['address'],
+            'township' =>$validatedData['township'],
         ]);
         $path = 'uploads/profile';
         if ($request->hasFile('image')) {
@@ -120,6 +121,7 @@ class DonorRepository implements DonorRepositoryInterface{
             $donorProfile->user_name = $request->input('user_name', $donorProfile->user_name );
             $donorProfile->image = $request->input('image', $donorProfile->image );
             $donorProfile->address =  $request->input('address', $donorProfile->address );
+            $donorProfile->township =  $request->input('township', $donorProfile->township );
             $donorProfile->phone_number =  $request->input('phone_number', $donorProfile->phone_number );
 
 

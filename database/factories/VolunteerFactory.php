@@ -20,9 +20,8 @@ class VolunteerFactory extends Factory
             'gender' => $this->faker->randomElement(['Male', 'Female']),
             'date_of_birth' => $this->faker->date,
             'user_id' => function () {
-                return \App\Models\User::factory()->create()->id;
-            },
-
+              return  \App\Models\User::factory()->create(['type' => 'volunteer'])->id;
+            }
         ];
     }
 }

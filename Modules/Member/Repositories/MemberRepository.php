@@ -49,6 +49,7 @@ class MemberRepository implements MemberRepositoryInterface
                 'image'=> $validatedData['image'],
                 'address' => $validatedData['address'],
                 'phone_number' => $validatedData['phone_number'],
+                'township' => $validatedData['township'],
 
             ]);
 
@@ -123,12 +124,13 @@ class MemberRepository implements MemberRepositoryInterface
         $memberProfile->user_name = $request->input('user_name', $memberProfile->user_name );
         $memberProfile->image = $request->input('image', $memberProfile->image );
         $memberProfile->address =  $request->input('address', $memberProfile->address );
+        $memberProfile->township =  $request->input('township', $memberProfile->township );
         $memberProfile->phone_number =  $request->input('phone_number', $memberProfile->phone_number );
 
 
         $memberProfile->save();
 
-        
+
     }
 
     public function deleteMember($id){

@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Meal;
+use App\Models\Partner;
+use App\Models\Profile;
 use App\Models\User;
 use Exception;
 use Illuminate\Http\Request;
@@ -17,22 +19,39 @@ class MealController extends Controller
 
         return response()->json(['data' => $meals], 200);
     }
-    public function showPartnerMeals(){
+
+    public function showMealByTownship(){
         $user = auth()->user();
-        $partnerMeals = Meal::where('partner_id', $user->id)->get();
-        return response()->json(['data' => $partnerMeals], 200);
-    }
+        $partners = User::where('type', 'partner')->get();
+        $mealsByTownship = [];
 
-    public function show($id)
-    {
-        $meal = Meal::find($id);
+        foreach($partners as $partner){
+            $partnerProfile = Profile::where('user_id', $partner->id)->first();
 
-        if (!$meal) {
-            return response()->json(['error' => 'Meal not found'], 404);
+            if ($partnerProfile && $partnerProfile->township) {
+                $partnerTownship = $partnerProfile->township;
+                $userTownship = $user->profile->township;
+
+
+                $meals = Meal::where('partner_id', $partner->id)->get();
+
+                foreach($meals as $meal){
+                    if ($partnerTownship === $userTownship) {
+                        $mealsByTownship[] = [
+                            'meal' => $meal
+                        ];
+                    }
+                }
+            }
         }
 
-        return response()->json(['meal' => $meal], 200);
+        if (empty($mealsByTownship)) {
+            return response()->json(["message" => "No Valid Meal"]);
+        }
+
+        return response()->json(["meals by township" => $mealsByTownship]);
     }
+
     public function store(Request $request)
     {
 

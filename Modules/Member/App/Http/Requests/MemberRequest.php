@@ -20,6 +20,7 @@ class MemberRequest extends FormRequest
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'address' => ['required'],
             'phone_number' => ['required'],
+            'township' => ['required'],
             'first_name' => ['required_if:type,member|string'],
             'last_name' => ['required_if:type,member|string'],
             'gender' => ['required_if:type,member|string'],

@@ -12,12 +12,16 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // \App\Models\User::factory(10)->create();
+        // \App\Models\User::factory(50)->create();
 
-        // \App\Models\User::factory()->create([
-        //     'name' => 'Test User',
-        //     'email' => 'test@example.com',
-        // ]);
+        \App\Models\User::factory()->create([
+            'user_name' => 'admin',
+            'email' => 'admin@gmail.com',
+            'password' => '12345678',
+            'confirm_password' => '12345678',
+            'type' => 'admin',
+            'role_as'=> 1
+        ]);
 
         $this->call([
 
@@ -26,9 +30,10 @@ class DatabaseSeeder extends Seeder
             DonorSeeder::class,
             CaregiverSeeder::class,
             VolunteerSeeder::class,
-            ProfileSeeder::class,
             PartnerSeeder::class,
+            ProfileSeeder::class,
             MealSeeder::class,
+            OrderSeeder::class,
         ]);
     }
 }

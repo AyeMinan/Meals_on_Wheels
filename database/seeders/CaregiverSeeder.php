@@ -13,6 +13,6 @@ class CaregiverSeeder extends Seeder
      */
     public function run(): void
     {
-        Caregiver::factory()->count(20)->create();
+        Caregiver::factory()->count(10)->create();
     }
 }

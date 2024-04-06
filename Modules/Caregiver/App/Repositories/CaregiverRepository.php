@@ -54,6 +54,7 @@ class CaregiverRepository implements CaregiverRepositoryInterface
                 'user_name' => $validatedData['user_name'],
                 'image'=> $validatedData['image'],
                 'address' => $validatedData['address'],
+                'township' => $validatedData['township'],
                 'phone_number' => $validatedData['phone_number'],
             ]);
 
@@ -96,7 +97,7 @@ class CaregiverRepository implements CaregiverRepositoryInterface
             return null;
         }
         $caregiverUser = User::where('id', $caregiver->user_id)->first();
-        
+
             $caregiver->first_name = $request->input('first_name', $caregiver->first_name);
             $caregiver->last_name = $request->input('last_name', $caregiver->last_name);
             $caregiver->gender = $request->input('gender', $caregiver->gender);
@@ -117,6 +118,7 @@ class CaregiverRepository implements CaregiverRepositoryInterface
             $caregiverProfile->user_name = $request->input('user_name', $caregiverProfile->user_name );
             $caregiverProfile->image = $request->input('image', $caregiverProfile->image );
             $caregiverProfile->address =  $request->input('address', $caregiverProfile->address );
+            $caregiverProfile->township =  $request->input('township', $caregiverProfile->township );
             $caregiverProfile->phone_number =  $request->input('phone_number', $caregiverProfile->phone_number );
 
 

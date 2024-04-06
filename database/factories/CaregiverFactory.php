@@ -22,7 +22,7 @@ class CaregiverFactory extends Factory
             'date_of_birth' => $this->faker->date,
             'relationship_with_member' => $this->faker->randomElement(['Family', 'Friend', 'Relative']),
             'user_id' => function () {
-                return \App\Models\User::factory()->create()->id;
+                return \App\Models\User::factory()->create(['type' => 'caregiver'])->id;
             },
 
         ];

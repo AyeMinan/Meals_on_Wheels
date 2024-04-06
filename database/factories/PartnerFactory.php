@@ -5,9 +5,6 @@ namespace Database\Factories;
 use App\Models\Partner;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
-/**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Partner>
- */
 class PartnerFactory extends Factory
 {
     protected $model = Partner::class;
@@ -20,9 +17,8 @@ class PartnerFactory extends Factory
             'shop_name' => $this->faker->company,
             'shop_address' => $this->faker->address,
             'user_id' => function () {
-                return \App\Models\User::factory()->create()->id;
-            },
-
+                return  \App\Models\User::factory()->create(['type' => 'partner'])->id;
+              }
         ];
     }
 }

@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('user_name');
             $table->string('image')->nullable();
             $table->string('address');
+            $table->string('township');
             $table->string('phone_number');
             $table->bigInteger('user_id')->unsigned();
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');

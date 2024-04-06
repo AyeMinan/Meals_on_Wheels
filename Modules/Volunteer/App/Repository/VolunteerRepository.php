@@ -49,6 +49,7 @@ class VolunteerRepository implements VolunteerInterface
                     'user_name' => $validatedData['user_name'],
                     'image'=> $validatedData['image'],
                     'address' => $validatedData['address'],
+                    'township' => $validatedData['township'],
                     'phone_number' => $validatedData['phone_number'],
 
                 ]);
@@ -101,6 +102,7 @@ class VolunteerRepository implements VolunteerInterface
             $volunteerProfile->user_name = $request->input('user_name', $volunteerProfile->user_name );
             $volunteerProfile->image = $request->input('image', $volunteerProfile->image );
             $volunteerProfile->address =  $request->input('address', $volunteerProfile->address );
+            $volunteerProfile->township =  $request->input('township', $volunteerProfile->township );
             $volunteerProfile->phone_number =  $request->input('phone_number', $volunteerProfile->phone_number );
 
 

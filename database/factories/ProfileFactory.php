@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use App\Models\Profile;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -19,14 +20,16 @@ class ProfileFactory extends Factory
      protected $model=Profile::class;
     public function definition(): array
     {
+        
         return [
             'image' => $this->faker->imageUrl(),
             'user_name' => $this->faker->name,
             'address' => $this->faker->address,
+            'township' => $this->faker->city,
             'phone_number' => $this->faker->numerify('+951234567'),
-            'user_id' => function () {
-                return \App\Models\User::factory()->create()->id;
-            },
+
         ];
     }
+
+
 }

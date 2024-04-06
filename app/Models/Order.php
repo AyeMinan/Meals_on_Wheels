@@ -24,7 +24,8 @@ class Order extends Model
         'is_pickup',
         'is_delivered',
         'image',
-        'orderer_id',
+        'member_id',
+        'caregiver_id',
         'partner_id',
         'volunteer_id'
     ];
@@ -37,4 +38,14 @@ class Order extends Model
     public function partner(){
         return $this->belongsTo(Partner::class);
     }
+    public function member(){
+        return $this->belongsTo(Member::class);
+    }
+    public function caregiver(){
+        return $this->belongsTo(Caregiver::class);
+    }
+    public function volunteer(){
+        return $this->belongsTo(Volunteer::class);
+    }
+ 
 }

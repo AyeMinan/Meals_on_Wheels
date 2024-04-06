@@ -19,6 +19,7 @@ class CaregiverRequest extends FormRequest
             'type' => 'required|string|in:member,caregiver,partner,volunteer,donor',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'address' => ['required'],
+            'township' => ['required'],
             'phone_number' => ['required'],
             'first_name' => ['required_if:type,caregiver|string'],
             'last_name' => ['required_if:type,caregiver|string'],

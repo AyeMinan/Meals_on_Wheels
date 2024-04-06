@@ -27,11 +27,11 @@ class OrderController extends Controller
         ->where('created_at', '>=', $aDayAgo)
         ->get();
         }else if($user->type === "member"){
-            $orders = Order::where('orderer_id', $user->id)
+            $orders = Order::where('member_id', $user->id)
         ->where('created_at', '>=', $aDayAgo)
         ->get();
         }else if($user->type === "caregiver"){
-            $orders = Order::where('orderer_id', $user->id)
+            $orders = Order::where('caregiver_id', $user->id)
         ->where('created_at', '>=', $aDayAgo)
         ->get();
         }else{
@@ -68,13 +68,17 @@ class OrderController extends Controller
             'image' => 'required',
             'temperature' => 'required',
             'partner_id' => 'required',
+            'member_id' => 'nullable',
+            'caregiver_id' => 'nullable',
             'volunteer_id' => 'nullable',
         ]);
 
         // dd($validatedData);
-        if($user && ($user->type === 'member' || $user->type === 'caregiver')){
-            $validatedData['orderer_id'] = $user->id;
-    }else{
+        if($user && $user->type === 'member' ){
+            $validatedData['member_id'] = $user->id;
+    }elseif($user && $user->type === 'caregiver'){
+        $validatedData['caregiver_id'] = $user->id;
+    } else{
         return response()->json([
             'message' => 'Invalid User Type'
         ],500);
@@ -167,12 +171,12 @@ public function showOrdersForRider()
             $memberAddress = null;
             $caregiverAddress = null;
 
-                $member = User::where('id', $order->orderer_id)->first();
+                $member = User::where('id', $order->member_id)->first();
                 if ($member->type === 'member') {
                     $memberAddress = $member->profile->address;
                 }
 
-                $caregiver = User::where('id', $order->orderer_id)->first();
+                $caregiver = User::where('id', $order->caregiver_id)->first();
                 if ($caregiver->type === 'caregiver') {
                     $caregiverAddress = $caregiver->profile->address;
                 }

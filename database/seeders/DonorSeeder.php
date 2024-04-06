@@ -13,6 +13,6 @@ class DonorSeeder extends Seeder
      */
     public function run(): void
     {
-        Donor::factory()->count(20)->create();
+        Donor::factory()->count(10)->create();
     }
 }

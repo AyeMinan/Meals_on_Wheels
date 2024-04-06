@@ -27,6 +27,16 @@ class Meal extends Model
         'partner_id'
     ];
 
+    protected $hidden = [
+        'created_at',
+        'updated_at'
+    ];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
     public function partner()
     {
         return $this->belongsTo(Partner::class);
