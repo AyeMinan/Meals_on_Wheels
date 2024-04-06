@@ -21,29 +21,26 @@ class ProfileController extends Controller
             ], 404);
         }
 
-          // Load additional details based on user type
-    switch ($profile->user->type) {
-        case 'member':
-            $profile->load('user.member');
-            break;
-        case 'caregiver':
-            $profile->load('user.caregiver');
-            break;
-        case 'partner':
-            $profile->load('user.partner');
-            break;
-        case 'volunteer':
-            $profile->load('user.volunteer');
-            break;
-        case 'donor':
-            $profile->load('user.donor');
-            break;
+        // Load additional details based on user type
+        switch ($profile->user->type) {
+            case 'member':
+                $profile->load('user.member');
+                break;
+            case 'caregiver':
+                $profile->load('user.caregiver');
+                break;
+            case 'partner':
+                $profile->load('user.partner');
+                break;
+            case 'volunteer':
+                $profile->load('user.volunteer');
+                break;
+            case 'donor':
+                $profile->load('user.donor');
+                break;
+        }
 
-    }
-
-    return response()->json($profile);
-
-
+        return response()->json($profile);
     }
 
     public function index()
@@ -104,7 +101,6 @@ class ProfileController extends Controller
         ]);
     }
 
-
     public function update(Request $request)
     {
 
@@ -131,7 +127,7 @@ $profile->update([
 
 
 $profile->user->update([
-    'user_name' => $request->input('user.user_name', $profile->user->user_name),
+    'name' => $request->input('user.name', $profile->user->name),
     'email' => $request->input('user.email', $profile->user->email),
     'password' => bcrypt($request->input('user.password', $profile->user->password)), // Update password if needed
     'type' => $request->input('user.type', $profile->user->type),
@@ -143,14 +139,10 @@ switch ($profile->user->type) {
     case 'member':
         if ($profile->user->member) {
             $profile->user->member->update([
-                'first_name' => $request->filled('first_name') ? $request->input('first_name') : $profile->user->member->first_name,
-                'last_name' => $request->input('last_name', $profile->user->member->last_name),
-                'gender' => $request->input('gender', $profile->user->member->gender),
-                'age' => $request->input('age', $profile->user->member->age),
-                'emergency_contact_number' => $request->input('emergency_contact_number', $profile->user->member->emergency_contact_number),
-                'date_of_birth' => $request->input('date_of_birth', $profile->user->member->date_of_birth),
-                'dietary_restriction' => $request->input('dietary_restriction', $profile->user->member->dietary_restriction),
-                'user_id' => $userId
+                'age' => $request->filled('age') ? $request->input('age') : $profile->user->member->age,
+                'health_condition' => $request->input('health_condition', $profile->user->member->health_condition),
+                'dietary_requirements' => $request->input('dietary_requirements', $profile->user->member->dietary_requirements),
+
             ]);
 
         }
@@ -160,12 +152,8 @@ switch ($profile->user->type) {
             case 'caregiver':
                 if ($profile->user->caregiver) {
                     $profile->user->caregiver->update([
-                        'first_name' => $request->input('first_name',$profile->user->caregiver->first_name),
-                        'last_name' => $request->input('last_name',$profile->user->caregiver->last_name),
-                        'date_of_birth' => $request->input('date_of_birth',$profile->user->caregiver->date_of_birth),
-                        'relationship_with_member' => $request->input('relationship_with_member',$profile->user->caregiver->relationship_with_member),
-                        'gender' => $request->input('gender',$profile->user->caregiver->gender),
-                        'user_id' => $userId
+                        'contact_information' => $request->input('contact_information',$profile->user->caregiver->contact_information),
+                        'relationship_to_member' => $request->input('relationship_to_member',$profile->user->caregiver->relationship_to_member)
 
                     ]);
 
@@ -175,11 +163,8 @@ switch ($profile->user->type) {
             case 'partner':
                 if ($profile->user->partner) {
                     $profile->user->partner->update([
-                        'first_name' => $request->input('first_name',$profile->user->partner->first_name),
-                        'last_name' => $request->input('last_name',$profile->user->partner->last_name),
-                        'shop_name' => $request->input('shop_name',$profile->user->partner->shop_name),
-                        'shop_address' => $request->input('shop_address',$profile->user->partner->shop_address),
-                        'user_id' => $userId
+                        'partner_type' => $request->input('partner_type',$profile->user->partner->partner_type),
+                        'location' => $request->input('location',$profile->user->partner->location),
 
                     ]);
                 }
@@ -188,11 +173,8 @@ switch ($profile->user->type) {
             case 'volunteer':
                 if ($profile->user->volunteer) {
                     $profile->user->volunteer->update([
-                'first_name' => $request->input('first_name', $profile->user->volunteer->first_name),
-                'last_name' => $request->input('last_name', $profile->user->volunteer->last_name),
-                'gender' => $request->input('gender', $profile->user->volunteer->gender),
-                'date_of_birth' => $request->input('date_of_birth', $profile->user->volunteer->date_of_birth),
-                'user_id' => $userId
+                        'volunteer_type' => $request->input('volunteer_type', $profile->user->volunteer->volunteer_type),
+                'availability' => $request->input('availability', $profile->user->volunteer->availability),
                     ]);
 
                 }
@@ -201,11 +183,8 @@ switch ($profile->user->type) {
             case 'donor':
                 if ($profile->user->donor) {
                     $profile->user->donor->update([
-                        'first_name' => $request->input('first_name', $profile->user->donor->first_name),
-                'last_name' => $request->input('last_name', $profile->user->donor->last_name),
-                'gender' => $request->input('gender', $profile->user->donor->gender),
-                'date_of_birth' => $request->input('date_of_birth', $profile->user->donor->date_of_birth),
-                'user_id' => $userId
+                        'donation_amount' => $request->input('donation_amount', $profile->user->donor->donation_amount),
+                'donation_date' => $request->input('donation_date', $profile->user->donor->donation_date),
 
                     ]);
                 
@@ -220,7 +199,6 @@ switch ($profile->user->type) {
             'status' => 200,
         ]);
     }
-
 
     public function destroy($id)
     {
