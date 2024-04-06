@@ -59,6 +59,17 @@ class MealController extends Controller
         return response()->json(["meals by township" => $mealsByTownship],200);
     }
 
+    public function showPartnerMeals(){
+        $user = auth()->user();
+        if($user->type === 'partner'){
+        $partnerMeals = Meal::where('partner_id', $user->id)->get();
+        }else{
+            return response()->json([
+                "message" => "Invalid User Type"
+            ]);
+        }
+        return response()->json(['data' => $partnerMeals], 200);
+    }
     public function store(Request $request)
     {
 
