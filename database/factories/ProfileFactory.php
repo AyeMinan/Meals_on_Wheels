@@ -25,7 +25,7 @@ class ProfileFactory extends Factory
             'image' => $defaultImage,
             'user_name' => $this->faker->name,
             'address' => $this->faker->address,
-            'township' => $this->faker->city,
+            'township' => $this->faker->randomElement(['Botataung', 'Pazundaung', 'Tamwe', 'Lanmadaw', 'Sanchaung', 'Latha']),
             'phone_number' => $this->faker->numerify('+951234567'),
 
         ];
