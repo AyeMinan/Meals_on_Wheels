@@ -20,9 +20,9 @@ class ProfileFactory extends Factory
      protected $model=Profile::class;
     public function definition(): array
     {
-        
+        $defaultImage = "1712213156.jpg";
         return [
-            'image' => $this->faker->imageUrl(),
+            'image' => $defaultImage,
             'user_name' => $this->faker->name,
             'address' => $this->faker->address,
             'township' => $this->faker->city,

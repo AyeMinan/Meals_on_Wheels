@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use App\Models\Partner;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -18,7 +19,8 @@ class MealFactory extends Factory
 
     public function definition(): array
     {
-        $partnerId = Partner::inRandomOrder()->first()->id;
+        $partnerId = User::where('type', 'partner')->inRandomOrder()->first()->id;
+        $defaultImage = "1712213230.jpg";
         return [
             'name' => $this->faker->sentence,
             'ingredients' => $this->faker->paragraph,
@@ -32,7 +34,7 @@ class MealFactory extends Factory
             'is_finished' =>  $this->faker->boolean,
             'is_pickup' =>  $this->faker->boolean,
             'is_delivered' =>  $this->faker->boolean,
-            'image' => $this->faker->imageUrl(),
+            'image' => $defaultImage,
             'temperature'=>$this->faker->randomFloat(2, -20, 40),
             'partner_id'=>$partnerId,
         ];
